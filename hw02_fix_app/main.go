@@ -1,29 +1,35 @@
-package init
+package main
 
 import (
+	"fmt"
+
 	"github.com/fixme_my_friend/hw02_fix_app/printer"
 	"github.com/fixme_my_friend/hw02_fix_app/reader"
 	"github.com/fixme_my_friend/hw02_fix_app/types"
-	"fmt"
 )
 
-func init() {
-	var path string = "data.json"
+func main() {
+	var path string
+	var err error
 
 	fmt.Printf("Enter data file path: ")
-	fmt.Scanln(&path)
+	_, err = fmt.Scanln(&path)
 
-	var err error
-	var staff []types.Employee
+	if err != nil && err.Error() != "unexpected newline" {
+		fmt.Printf("Error: %v", err)
+		return
+	}
 
 	if len(path) == 0 {
 		path = "data.json"
-	} else {
 	}
 
-	staff, err = reader.ReadJSON(path, -1)
+	var staff []types.Employee
 
-	fmt.Print(err)
+	staff, err = reader.ReadJSON(path)
+	if err != nil {
+		fmt.Printf("Error: %v", err)
+	}
 
 	printer.PrintStaff(staff)
 }
