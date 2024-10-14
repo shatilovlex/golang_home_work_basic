@@ -9,14 +9,7 @@ linters-settings:
     lines: 150
     statements: 80
   govet:
-    # Report about shadowed variables.
-    # Default: false
-    check-shadowing: true
-    settings:
-      shadow:
-        # Whether to be strict about shadowing; can be noisy.
-        # Default: false
-        strict: true
+    enable-all: true
 
 issues:
   exclude-rules:
@@ -37,7 +30,7 @@ linters:
     - durationcheck
     - errorlint
     - exhaustive
-    - exportloopref
+    - copyloopvar
     - funlen
     - gci
     - gocognit
