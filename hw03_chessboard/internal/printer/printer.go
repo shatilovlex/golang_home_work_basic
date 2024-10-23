@@ -5,10 +5,10 @@ import (
 )
 
 func PrintChessboard(size uint) {
-	var firstSquareColorIsWhite = firstSquareColorCalculator(size)
+	firstSquareColorIsWhite := firstSquareColorCalculator(size)
 	var currentSquareColor string
 	for i := uint(0); i < size; i++ {
-		if firstSquareColorIsWhite == true {
+		if firstSquareColorIsWhite {
 			firstSquareColorIsWhite = false
 			currentSquareColor = " "
 		} else {
@@ -33,8 +33,9 @@ func switchColor(color string) string {
 	return color
 }
 
-// Левая нижняя клетка всегда черная
+// Левая нижняя клетка всегда черная.
 // Соответственно для четного кол-ва полей первая клетка доски - белая(пробел), для нечетного - черная(#)
+
 func firstSquareColorCalculator(chessboardSize uint) bool {
 	return chessboardSize%2 == 0
 }

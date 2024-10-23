@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-const DEFAULT_SIZE = 8
+const DefaultSize = 8
 
 func ConsoleReader() (uint, error) {
 	var enteredSize string
@@ -15,10 +15,10 @@ func ConsoleReader() (uint, error) {
 	_, err = fmt.Scanln(&enteredSize)
 
 	if err != nil && err.Error() != "unexpected newline" {
-		return DEFAULT_SIZE, nil
+		return DefaultSize, nil
 	}
 	if enteredSize == "" {
-		return DEFAULT_SIZE, nil
+		return DefaultSize, nil
 	}
 
 	return parseEnteredSize(enteredSize)
