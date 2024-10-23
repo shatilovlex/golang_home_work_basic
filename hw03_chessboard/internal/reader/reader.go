@@ -2,36 +2,20 @@ package reader
 
 import (
 	"fmt"
-	"strconv"
 )
 
-const DefaultSize = 8
+const DefaultSize uint = 8
 
 func ConsoleReader() (uint, error) {
-	var enteredSize string
+	var enteredSize int
 	var err error
 
 	fmt.Printf("Enter size: ")
-	_, err = fmt.Scanln(&enteredSize)
+	_, err = fmt.Scanf("%d", &enteredSize)
 
-	if err != nil && err.Error() != "unexpected newline" {
-		return DefaultSize, nil
-	}
-	if enteredSize == "" {
+	if err != nil && err.Error() != "unexpected newline" || enteredSize <= 0 {
 		return DefaultSize, nil
 	}
 
-	return parseEnteredSize(enteredSize)
-}
-
-func parseEnteredSize(enteredSize string) (uint, error) {
-	var size uint64
-	var err error
-	size, err = strconv.ParseUint(enteredSize, 10, 32)
-
-	if err != nil {
-		return 0, err
-	}
-
-	return uint(size), nil
+	return uint(enteredSize), nil
 }
