@@ -4,9 +4,9 @@ import (
 	"fmt"
 )
 
-const DefaultSize uint = 8
+const DefaultSize int = 8
 
-func ConsoleReader() (uint, error) {
+func ConsoleReader() int {
 	var enteredSize int
 	var err error
 
@@ -14,8 +14,8 @@ func ConsoleReader() (uint, error) {
 	_, err = fmt.Scanf("%d", &enteredSize)
 
 	if err != nil && err.Error() != "unexpected newline" || enteredSize <= 0 {
-		return DefaultSize, nil
+		return DefaultSize
 	}
 
-	return uint(enteredSize), nil
+	return enteredSize
 }
