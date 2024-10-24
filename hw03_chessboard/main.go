@@ -1,5 +1,10 @@
 package main
 
+import (
+	"github.com/shatilovlex/golang_home_work_basic/hw03_chessboard/internal/printer"
+	"github.com/shatilovlex/golang_home_work_basic/hw03_chessboard/internal/reader"
+)
+
 func main() {
-	// Place your code here.
+	printer.PrintChessboard(reader.ConsoleReader())
 }
