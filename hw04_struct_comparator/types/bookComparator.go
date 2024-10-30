@@ -27,5 +27,4 @@ func (c BookComparator) Compare(left Book, right Book) bool {
 
 func NewBookComparator(field FieldComparator) *BookComparator {
 	return &BookComparator{field: field}
-
 }
