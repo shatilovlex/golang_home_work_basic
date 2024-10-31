@@ -2,6 +2,7 @@ package shape
 
 import (
 	"errors"
+
 	"github.com/shatilovlex/golang_home_work_basic/hw05_shapes/pkg/shape/types/shapes"
 )
 
