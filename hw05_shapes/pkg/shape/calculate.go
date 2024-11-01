@@ -3,21 +3,13 @@ package shape
 import (
 	"errors"
 
-	"github.com/shatilovlex/golang_home_work_basic/hw05_shapes/pkg/shape/types/shapes"
+	"github.com/shatilovlex/golang_home_work_basic/hw05_shapes/pkg/shape/types"
 )
 
 func CalculateArea(s any) (float64, error) {
-	var area float64
-	var err error
-	switch shape := s.(type) {
-	case shapes.Circle:
-		area = shape.CalcSquare()
-	case shapes.Rectangle:
-		area = shape.CalcSquare()
-	case shapes.Triangle:
-		area = shape.CalcSquare()
-	default:
-		err = errors.New("переданный объект не является фигурой")
+	if shape, ok := s.(types.Shape); ok {
+		return shape.CalcSquare(), nil
 	}
-	return area, err
+
+	return 0, errors.New("переданный объект не является фигурой")
 }
