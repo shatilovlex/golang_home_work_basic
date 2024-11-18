@@ -20,6 +20,7 @@ func TestGenerateChessboard(t *testing.T) {
 		{name: "GetSmallChessboard", size: 2, want: " #\n# \n"},
 		{name: "GetOneSquare", size: 1, want: "#\n"},
 		{name: "GetEmptyChessboard", size: 0, want: ""},
+		{name: "GetEmptyChessboardWhenNegativeSize", size: -1, want: ""},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

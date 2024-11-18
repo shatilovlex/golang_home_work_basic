@@ -43,7 +43,7 @@ func TestShape_CalcSquare(t *testing.T) {
 	}
 }
 
-func TestShape_CalcCircle(t *testing.T) {
+func TestShape_String(t *testing.T) {
 	tests := []struct {
 		name  string
 		shape fmt.Stringer
