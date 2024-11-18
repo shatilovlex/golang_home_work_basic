@@ -7,15 +7,15 @@ import (
 	"io"
 	"os"
 
-	"hw06_testing/hw02/types"
+	types "hw06_testing/hw02/types"
 )
 
-var NoSuchFileOrDirectoryError = errors.New("no such file or directory")
-var JsonInvalidError = errors.New("json invalid error")
+var ErrNoSuchFileOrDirectoryError = errors.New("no such file or directory")
+
+var ErrJSONInvalidError = errors.New("json invalid error")
 
 func ReadJSON(filePath string) ([]types.Employee, error) {
-	f, err := getFile(
-		filePath)
+	f, err := getFile(filePath)
 	if err != nil {
 		return nil, fmt.Errorf("get JSON failed: %w", err)
 	}
@@ -31,7 +31,7 @@ func getEmployeesByBytes(bytes []byte) ([]types.Employee, error) {
 	var data []types.Employee
 	err := json.Unmarshal(bytes, &data)
 	if err != nil {
-		return nil, JsonInvalidError
+		return nil, ErrJSONInvalidError
 	}
 	return data, nil
 }
@@ -47,7 +47,7 @@ func readBytes(r io.Reader) ([]byte, error) {
 func getFile(filePath string) (io.Reader, error) {
 	f, err := os.Open(filePath)
 	if err != nil {
-		return nil, NoSuchFileOrDirectoryError
+		return nil, ErrNoSuchFileOrDirectoryError
 	}
 	return f, nil
 }

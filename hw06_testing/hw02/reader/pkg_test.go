@@ -1,13 +1,13 @@
 package reader
 
 import (
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"io"
 	"strings"
 	"testing"
 
-	"hw06_testing/hw02/types"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	types "hw06_testing/hw02/types"
 )
 
 type errReader struct{}
@@ -23,10 +23,11 @@ func TestReadJSON(t *testing.T) {
 	subset := types.Employee{Name: "Rob", UserID: 10, Age: 25, DepartmentID: 3}
 	assert.Contains(t, result, subset)
 }
+
 func TestReadJSONError(t *testing.T) {
 	_, err := ReadJSON("emptyFile.json")
 
-	assert.ErrorIs(t, err, JsonInvalidError)
+	assert.ErrorIs(t, err, ErrJSONInvalidError)
 }
 
 func TestGetFile(t *testing.T) {
@@ -39,7 +40,7 @@ func TestGetFile(t *testing.T) {
 func TestGetFileError(t *testing.T) {
 	_, err := getFile("")
 
-	require.ErrorIs(t, err, NoSuchFileOrDirectoryError)
+	require.ErrorIs(t, err, ErrNoSuchFileOrDirectoryError)
 }
 
 func TestReadBytes(t *testing.T) {
@@ -67,8 +68,8 @@ func TestReadEmployeesByBytes(t *testing.T) {
 	require.NoError(t, err)
 	subset := types.Employee{Name: "Rob", UserID: 10, Age: 25, DepartmentID: 3}
 	assert.Contains(t, employees, subset)
-
 }
+
 func TestReadEmployeesByBytesError(t *testing.T) {
 	input := `]`
 

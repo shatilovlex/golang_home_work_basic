@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 
-	"hw06_testing/hw02/printer"
-	"hw06_testing/hw02/reader"
-	"hw06_testing/hw02/types"
+	printer "hw06_testing/hw02/printer"
+	reader "hw06_testing/hw02/reader"
+	types "hw06_testing/hw02/types"
 )
 
 func main() {

@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"hw06_testing/hw05/pkg/shape"
-	"hw06_testing/hw05/pkg/shape/types"
-	"hw06_testing/hw05/pkg/shape/types/shapes"
+
+	shape "hw06_testing/hw05/pkg/shape"
+	types "hw06_testing/hw05/pkg/shape/types"
+	shapes "hw06_testing/hw05/pkg/shape/types/shapes"
 )
 
 func main() {

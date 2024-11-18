@@ -2,9 +2,10 @@ package shapes
 
 import (
 	"fmt"
-	"github.com/stretchr/testify/assert"
-	"hw06_testing/hw05/pkg/shape/types"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	types "hw06_testing/hw05/pkg/shape/types"
 )
 
 func TestShape_CalcSquare(t *testing.T) {

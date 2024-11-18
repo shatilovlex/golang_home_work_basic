@@ -1,9 +1,10 @@
 package shape
 
 import (
-	"github.com/stretchr/testify/assert"
-	"hw06_testing/hw05/pkg/shape/types/shapes"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	shapes "hw06_testing/hw05/pkg/shape/types/shapes"
 )
 
 func TestGetShapeString(t *testing.T) {

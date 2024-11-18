@@ -1,8 +1,9 @@
 package printer
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGenerateChessboard(t *testing.T) {
@@ -11,7 +12,11 @@ func TestGenerateChessboard(t *testing.T) {
 		size int
 		want string
 	}{
-		{name: "GetClassicChessboard", size: 8, want: " # # # #\n# # # # \n # # # #\n# # # # \n # # # #\n# # # # \n # # # #\n# # # # \n"},
+		{
+			name: "GetClassicChessboard",
+			size: 8,
+			want: " # # # #\n# # # # \n # # # #\n# # # # \n # # # #\n# # # # \n # # # #\n# # # # \n",
+		},
 		{name: "GetSmallChessboard", size: 2, want: " #\n# \n"},
 		{name: "GetOneSquare", size: 1, want: "#\n"},
 		{name: "GetEmptyChessboard", size: 0, want: ""},

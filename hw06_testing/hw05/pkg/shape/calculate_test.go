@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"hw06_testing/hw05/pkg/shape/types/shapes"
+	shapes "hw06_testing/hw05/pkg/shape/types/shapes"
 )
 
 func TestCalculateArea(t *testing.T) {
@@ -47,5 +47,5 @@ func TestCalculateArea(t *testing.T) {
 
 func TestCalculateAreaError(t *testing.T) {
 	_, err := CalculateArea("")
-	require.ErrorIs(t, err, objectIsNotShape)
+	require.ErrorIs(t, err, ErrObjectIsNotShape)
 }

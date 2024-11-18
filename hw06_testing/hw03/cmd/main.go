@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"hw06_testing/hw03/internal/printer"
-	"hw06_testing/hw03/internal/reader"
+	printer "hw06_testing/hw03/internal/printer"
+	reader "hw06_testing/hw03/internal/reader"
 )
 
 func main() {

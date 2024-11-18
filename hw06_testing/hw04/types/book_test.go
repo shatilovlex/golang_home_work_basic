@@ -1,8 +1,9 @@
 package types
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestBookComparator_Compare(t *testing.T) {
@@ -17,7 +18,6 @@ func TestBookComparator_Compare(t *testing.T) {
 		want  bool
 	}{
 		{
-			name:  "compareByYear",
 			field: Year,
 			args: args{
 				left: Book{
@@ -40,7 +40,6 @@ func TestBookComparator_Compare(t *testing.T) {
 			want: true,
 		},
 		{
-			name:  "compareByRate",
 			field: Rate,
 			args: args{
 				left: Book{
@@ -63,7 +62,6 @@ func TestBookComparator_Compare(t *testing.T) {
 			want: true,
 		},
 		{
-			name:  "compareBySize",
 			field: Size,
 			args: args{
 				left: Book{
@@ -86,7 +84,6 @@ func TestBookComparator_Compare(t *testing.T) {
 			want: true,
 		},
 		{
-			name:  "compareByEqualRate",
 			field: Rate,
 			args: args{
 				left: Book{
@@ -109,7 +106,6 @@ func TestBookComparator_Compare(t *testing.T) {
 			want: false,
 		},
 		{
-			name:  "LessOnLeftRate",
 			field: Rate,
 			args: args{
 				left: Book{
@@ -132,7 +128,6 @@ func TestBookComparator_Compare(t *testing.T) {
 			want: false,
 		},
 		{
-			name:  "compareWithInvalidComparatorField",
 			field: 100500,
 			args: args{
 				left: Book{
@@ -159,7 +154,6 @@ func TestBookComparator_Compare(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			c := NewBookComparator(tt.field)
 			got := c.Compare(tt.args.left, tt.args.right)
-
 			assert.Equal(t, tt.want, got)
 		})
 	}
