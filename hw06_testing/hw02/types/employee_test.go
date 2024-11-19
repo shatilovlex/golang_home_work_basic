@@ -15,7 +15,7 @@ func TestEmployee_MakeCorrectString(t *testing.T) {
 		DepartmentID: 22,
 	}
 
-	result := employee.String()
+	actual := employee.String()
 
-	assert.Equal(t, expected, result)
+	assert.Equal(t, expected, actual)
 }

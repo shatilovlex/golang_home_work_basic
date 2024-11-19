@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/shatilovlex/golang_home_work_basic/hw06_testing/hw05/pkg/shape/types"
 	"github.com/stretchr/testify/assert"
-	types "hw06_testing/hw05/pkg/shape/types"
 )
 
 func TestShape_CalcSquare(t *testing.T) {

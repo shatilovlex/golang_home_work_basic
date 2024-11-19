@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 
-	printer "hw06_testing/hw02/printer"
-	reader "hw06_testing/hw02/reader"
-	types "hw06_testing/hw02/types"
+	"github.com/shatilovlex/golang_home_work_basic/hw06_testing/hw02/printer"
+	"github.com/shatilovlex/golang_home_work_basic/hw06_testing/hw02/reader"
+	"github.com/shatilovlex/golang_home_work_basic/hw06_testing/hw02/types"
 )
 
 func main() {

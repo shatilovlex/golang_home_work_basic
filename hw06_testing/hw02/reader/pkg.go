@@ -2,52 +2,26 @@ package reader
 
 import (
 	"encoding/json"
-	"errors"
-	"fmt"
 	"io"
 	"os"
 
-	types "hw06_testing/hw02/types"
+	"github.com/shatilovlex/golang_home_work_basic/hw06_testing/hw02/types"
 )
 
-var ErrNoSuchFileOrDirectoryError = errors.New("no such file or directory")
-
-var ErrJSONInvalidError = errors.New("json invalid error")
-
 func ReadJSON(filePath string) ([]types.Employee, error) {
-	f, err := getFile(filePath)
-	if err != nil {
-		return nil, fmt.Errorf("get JSON failed: %w", err)
-	}
-
-	bytes, err := readBytes(f)
-	if err != nil {
-		return nil, err
-	}
-	return getEmployeesByBytes(bytes)
-}
-
-func getEmployeesByBytes(bytes []byte) ([]types.Employee, error) {
-	var data []types.Employee
-	err := json.Unmarshal(bytes, &data)
-	if err != nil {
-		return nil, ErrJSONInvalidError
-	}
-	return data, nil
-}
-
-func readBytes(r io.Reader) ([]byte, error) {
-	bytes, err := io.ReadAll(r)
-	if err != nil {
-		return nil, err
-	}
-	return bytes, nil
-}
-
-func getFile(filePath string) (io.Reader, error) {
 	f, err := os.Open(filePath)
 	if err != nil {
-		return nil, ErrNoSuchFileOrDirectoryError
+		return nil, err
 	}
-	return f, nil
+
+	bytes, err := io.ReadAll(f)
+	if err != nil {
+		return nil, err
+	}
+
+	var data []types.Employee
+
+	err = json.Unmarshal(bytes, &data)
+
+	return data, err
 }

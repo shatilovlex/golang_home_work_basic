@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	printer "hw06_testing/hw03/internal/printer"
-	reader "hw06_testing/hw03/internal/reader"
+	"github.com/shatilovlex/golang_home_work_basic/hw06_testing/hw03/internal/printer"
+	"github.com/shatilovlex/golang_home_work_basic/hw06_testing/hw03/internal/reader"
 )
 
 func main() {

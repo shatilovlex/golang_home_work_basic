@@ -1,79 +1,29 @@
 package reader
 
 import (
-	"io"
-	"strings"
 	"testing"
 
+	"github.com/shatilovlex/golang_home_work_basic/hw06_testing/hw02/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	types "hw06_testing/hw02/types"
 )
 
-type errReader struct{}
-
-func (errReader) Read([]byte) (int, error) {
-	return 0, io.ErrUnexpectedEOF
-}
-
 func TestReadJSON(t *testing.T) {
-	result, err := ReadJSON("data.json")
+	result, err := ReadJSON("validJson.json")
 
 	require.NoError(t, err)
 	subset := types.Employee{Name: "Rob", UserID: 10, Age: 25, DepartmentID: 3}
 	assert.Contains(t, result, subset)
 }
 
-func TestReadJSONError(t *testing.T) {
-	_, err := ReadJSON("emptyFile.json")
+func TestReadJSONForInvalidJson(t *testing.T) {
+	_, err := ReadJSON("invalidJson.json")
 
-	assert.ErrorIs(t, err, ErrJSONInvalidError)
+	assert.ErrorContains(t, err, "unexpected end of JSON input")
 }
 
-func TestGetFile(t *testing.T) {
-	file, err := getFile("emptyFile.json")
+func TestReadJSONForNotExistsFile(t *testing.T) {
+	_, err := ReadJSON("notExistsFile.json")
 
-	require.NoError(t, err)
-	assert.NotNil(t, file)
-}
-
-func TestGetFileError(t *testing.T) {
-	_, err := getFile("")
-
-	require.ErrorIs(t, err, ErrNoSuchFileOrDirectoryError)
-}
-
-func TestReadBytes(t *testing.T) {
-	input := strings.NewReader("Json data")
-
-	bytes, err := readBytes(input)
-
-	require.NoError(t, err)
-	assert.NotNil(t, bytes)
-}
-
-func TestReadBytesError(t *testing.T) {
-	input := errReader{}
-
-	_, err := readBytes(input)
-
-	require.ErrorIs(t, err, io.ErrUnexpectedEOF)
-}
-
-func TestReadEmployeesByBytes(t *testing.T) {
-	input := `[{"userId": 10,"age": 25,"name": "Rob","departmentId": 3}]`
-
-	employees, err := getEmployeesByBytes([]byte(input))
-
-	require.NoError(t, err)
-	subset := types.Employee{Name: "Rob", UserID: 10, Age: 25, DepartmentID: 3}
-	assert.Contains(t, employees, subset)
-}
-
-func TestReadEmployeesByBytesError(t *testing.T) {
-	input := `]`
-
-	_, err := getEmployeesByBytes([]byte(input))
-
-	require.Error(t, err)
+	assert.ErrorContains(t, err, "open notExistsFile.json: no such file or directory")
 }

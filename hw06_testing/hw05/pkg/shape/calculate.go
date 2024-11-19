@@ -3,7 +3,7 @@ package shape
 import (
 	"errors"
 
-	types "hw06_testing/hw05/pkg/shape/types"
+	"github.com/shatilovlex/golang_home_work_basic/hw06_testing/hw05/pkg/shape/types"
 )
 
 var ErrObjectIsNotShape = errors.New("переданный объект не является фигурой")

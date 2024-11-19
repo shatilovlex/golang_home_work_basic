@@ -3,8 +3,8 @@ package shape
 import (
 	"testing"
 
+	"github.com/shatilovlex/golang_home_work_basic/hw06_testing/hw05/pkg/shape/types/shapes"
 	"github.com/stretchr/testify/assert"
-	shapes "hw06_testing/hw05/pkg/shape/types/shapes"
 )
 
 func TestGetShapeString(t *testing.T) {

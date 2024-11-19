@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 
-	shape "hw06_testing/hw05/pkg/shape"
-	types "hw06_testing/hw05/pkg/shape/types"
-	shapes "hw06_testing/hw05/pkg/shape/types/shapes"
+	"github.com/shatilovlex/golang_home_work_basic/hw06_testing/hw05/pkg/shape"
+	"github.com/shatilovlex/golang_home_work_basic/hw06_testing/hw05/pkg/shape/types"
+	"github.com/shatilovlex/golang_home_work_basic/hw06_testing/hw05/pkg/shape/types/shapes"
 )
 
 func main() {

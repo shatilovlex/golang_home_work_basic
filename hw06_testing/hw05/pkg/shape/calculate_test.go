@@ -3,9 +3,9 @@ package shape
 import (
 	"testing"
 
+	"github.com/shatilovlex/golang_home_work_basic/hw06_testing/hw05/pkg/shape/types/shapes"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	shapes "hw06_testing/hw05/pkg/shape/types/shapes"
 )
 
 func TestCalculateArea(t *testing.T) {
