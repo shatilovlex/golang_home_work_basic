@@ -1,9 +1,10 @@
 package json
 
 import (
+	"testing"
+
 	"github.com/shatilovlex/golang_home_work_basic/hw09_serialize/pkg/types"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func Test_serialize(t *testing.T) {
@@ -15,7 +16,7 @@ func Test_serialize(t *testing.T) {
 		{
 			name: "test serialize successful",
 			book: types.Book{
-				Id:     1,
+				ID:     1,
 				Title:  "The Go Programming Language. - Addison-Wesley Professional",
 				Size:   272,
 				Rate:   9,
@@ -23,7 +24,8 @@ func Test_serialize(t *testing.T) {
 				Author: "Donovan A., Kernighan В.",
 				Sample: []byte("Sample"),
 			},
-			want: []byte("{\"id\":1,\"year\":2015,\"size\":272,\"rate\":9,\"title\":\"The Go Programming Language. - Addison-Wesley Professional\",\"author\":\"Donovan A., Kernighan В.\",\"sample\":\"U2FtcGxl\"}"),
+			want: []byte("{\"id\":1,\"year\":2015,\"size\":272,\"rate\":9,\"title\":\"The Go Programming Language. " +
+				"- Addison-Wesley Professional\",\"author\":\"Donovan A., Kernighan В.\",\"sample\":\"U2FtcGxl\"}"),
 		},
 		{
 			name: "test serialize empty successful",
@@ -41,9 +43,10 @@ func Test_serialize(t *testing.T) {
 }
 
 func Test_unserialize(t *testing.T) {
-	book := []byte("{\"id\":1,\"year\":2015,\"size\":272,\"rate\":9,\"title\":\"The Go Programming Language. - Addison-Wesley Professional\",\"author\":\"Donovan A., Kernighan В.\",\"sample\":\"U2FtcGxl\"}")
+	book := []byte("{\"id\":1,\"year\":2015,\"size\":272,\"rate\":9,\"title\":\"The Go Programming Language. " +
+		"- Addison-Wesley Professional\",\"author\":\"Donovan A., Kernighan В.\",\"sample\":\"U2FtcGxl\"}")
 	want := &types.Book{
-		Id:     1,
+		ID:     1,
 		Title:  "The Go Programming Language. - Addison-Wesley Professional",
 		Size:   272,
 		Rate:   9,

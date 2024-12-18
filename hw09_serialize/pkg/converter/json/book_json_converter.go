@@ -2,6 +2,7 @@ package json
 
 import (
 	"encoding/json"
+
 	"github.com/shatilovlex/golang_home_work_basic/hw09_serialize/pkg/types"
 )
 

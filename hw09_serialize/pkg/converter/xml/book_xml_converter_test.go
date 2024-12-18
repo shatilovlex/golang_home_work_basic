@@ -1,9 +1,10 @@
 package xml
 
 import (
+	"testing"
+
 	"github.com/shatilovlex/golang_home_work_basic/hw09_serialize/pkg/types"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func Test_serialize(t *testing.T) {
@@ -15,7 +16,7 @@ func Test_serialize(t *testing.T) {
 		{
 			name: "test serialize successful",
 			book: types.Book{
-				Id:     1,
+				ID:     1,
 				Title:  "The Go Programming Language. - Addison-Wesley Professional",
 				Size:   272,
 				Rate:   9,
@@ -23,7 +24,9 @@ func Test_serialize(t *testing.T) {
 				Author: "Donovan A., Kernighan В.",
 				Sample: []byte("Sample"),
 			},
-			want: []byte("<Book><id>1</id><year>2015</year><size>272</size><rate>9</rate><title>The Go Programming Language. - Addison-Wesley Professional</title><author>Donovan A., Kernighan В.</author><sample>Sample</sample></Book>"),
+			want: []byte("<Book><id>1</id><year>2015</year><size>272</size><rate>9</rate>" +
+				"<title>The Go Programming Language. - Addison-Wesley Professional</title>" +
+				"<author>Donovan A., Kernighan В.</author><sample>Sample</sample></Book>"),
 		},
 		{
 			name: "test serialize empty successful",
@@ -41,9 +44,11 @@ func Test_serialize(t *testing.T) {
 }
 
 func Test_unserialize(t *testing.T) {
-	book := []byte("<Book><id>1</id><year>2015</year><size>272</size><rate>9</rate><title>The Go Programming Language. - Addison-Wesley Professional</title><author>Donovan A., Kernighan В.</author><sample>Sample</sample></Book>")
+	book := []byte("<Book><id>1</id><year>2015</year><size>272</size><rate>9</rate>" +
+		"<title>The Go Programming Language. - Addison-Wesley Professional</title>" +
+		"<author>Donovan A., Kernighan В.</author><sample>Sample</sample></Book>")
 	want := &types.Book{
-		Id:     1,
+		ID:     1,
 		Title:  "The Go Programming Language. - Addison-Wesley Professional",
 		Size:   272,
 		Rate:   9,

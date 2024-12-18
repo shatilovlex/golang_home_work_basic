@@ -1,14 +1,15 @@
-package message_pack
+package mp
 
 import (
+	"testing"
+
 	"github.com/shatilovlex/golang_home_work_basic/hw09_serialize/pkg/types"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func Test_serialize_unserialize_book(t *testing.T) {
 	book := &types.Book{
-		Id:     1,
+		ID:     1,
 		Title:  "The Go Programming Language. - Addison-Wesley Professional",
 		Size:   272,
 		Rate:   9,

@@ -11,8 +11,7 @@ func serialize(book types.Book) ([]byte, error) {
 
 func unserialize(book []byte) (*types.Book, error) {
 	var result types.Book
-	var err error
-	err = yaml.Unmarshal(book, &result)
+	err := yaml.Unmarshal(book, &result)
 
 	return &result, err
 }

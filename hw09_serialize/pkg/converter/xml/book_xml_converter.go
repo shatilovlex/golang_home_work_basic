@@ -2,6 +2,7 @@ package xml
 
 import (
 	"encoding/xml"
+
 	"github.com/shatilovlex/golang_home_work_basic/hw09_serialize/pkg/types"
 )
 
@@ -11,8 +12,6 @@ func serialize(book types.Book) ([]byte, error) {
 
 func unserialize(data []byte) (*types.Book, error) {
 	var result types.Book
-	var err error
-	err = xml.Unmarshal(data, &result)
-
+	err := xml.Unmarshal(data, &result)
 	return &result, err
 }

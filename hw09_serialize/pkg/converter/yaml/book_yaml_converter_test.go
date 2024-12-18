@@ -1,9 +1,10 @@
 package yaml
 
 import (
+	"testing"
+
 	"github.com/shatilovlex/golang_home_work_basic/hw09_serialize/pkg/types"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func Test_serialize(t *testing.T) {
@@ -15,7 +16,7 @@ func Test_serialize(t *testing.T) {
 		{
 			name: "test serialize successful",
 			book: types.Book{
-				Id:     1,
+				ID:     1,
 				Title:  "The Go Programming Language. - Addison-Wesley Professional",
 				Size:   272,
 				Rate:   9,
@@ -47,7 +48,7 @@ func Test_unserialize(t *testing.T) {
 		"title: The Go Programming Language. - Addison-Wesley Professional\n" +
 		"author: Donovan A., Kernighan В.\nsample:\n    - 49\n")
 	want := &types.Book{
-		Id:     1,
+		ID:     1,
 		Title:  "The Go Programming Language. - Addison-Wesley Professional",
 		Size:   272,
 		Rate:   9,

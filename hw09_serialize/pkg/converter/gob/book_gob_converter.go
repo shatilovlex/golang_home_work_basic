@@ -3,6 +3,7 @@ package gob
 import (
 	"bytes"
 	"encoding/gob"
+
 	"github.com/shatilovlex/golang_home_work_basic/hw09_serialize/pkg/types"
 )
 
