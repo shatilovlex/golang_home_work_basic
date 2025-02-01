@@ -17,6 +17,7 @@ create table if not exists shop.Orders
     total_amount float,
     constraint fk_orders_users foreign key (user_id) references shop.Users (id)
 );
+create index idx_order_user_id ON shop.Orders USING btree (user_id);
 
 create table if not exists shop.Products
 (
@@ -34,6 +35,8 @@ create table if not exists shop.OrderProducts
     constraint fk_orderProduct_product foreign key (product_id) references shop.Products on delete cascade
 
 );
+create index idx_orderproducts_order_id ON shop.OrderProducts USING btree (order_id);
+create index idx_orderproducts_products_id ON shop.OrderProducts USING btree (product_id);
 
 INSERT INTO shop.Users (name, email, password)
 VALUES ('Вася', 'vasia@mail.loc', 'hash'),
