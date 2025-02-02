@@ -1,43 +1,29 @@
 package main
 
 import (
-	"context"
 	"flag"
 	"fmt"
-	"io"
-	"log"
 	"net/http"
-	"strings"
+
+	"github.com/shatilovlex/golang_home_work_basic/hw13_http/internal/client/app"
 )
 
 func main() {
 	method := flag.String("method", "GET", "Request method")
-	url := flag.String("url", "http://localhost:8088/v1/get-user", "Url")
+	url := flag.String("url", "http://localhost:8080/v1/get-user", "URL")
 	body := flag.String("body", "", "Body")
 	flag.Parse()
 
-	client := &http.Client{}
-	request, err := http.NewRequestWithContext(context.Background(), *method, *url, strings.NewReader(*body))
-	if err != nil {
-		log.Fatal(err)
-	}
-	request.Header.Add("Content-Type", "application/json")
-
-	resp, err := client.Do(request)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		fmt.Printf("Ошибка HTTP-ответа: %d\n", resp.StatusCode)
-		return
+	client := app.API{
+		Client: &http.Client{},
+		URL:    *url,
+		Method: *method,
+		Body:   *body,
 	}
 
-	respBody, err := io.ReadAll(resp.Body)
+	respBody, err := client.DoStuff()
 	if err != nil {
-		fmt.Println("Ошибка чтения", err)
-		return
+		fmt.Println(err)
 	}
 
 	fmt.Println(string(respBody))
