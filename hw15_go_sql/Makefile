@@ -36,3 +36,7 @@ migration-up:
 
 migration-down:
 	goose -dir ${MIGRATION_DIR} postgres ${MIGRATION_DSN} down -v
+
+sqlc:
+	docker run --rm -v $(pwd):/src -w /src sqlc/sqlc generate
+
