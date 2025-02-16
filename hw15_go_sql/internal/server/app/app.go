@@ -12,7 +12,10 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/config"
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/repository"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/server/handler"
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/pkg/pgconnect"
 )
 
 type App struct {
@@ -27,11 +30,22 @@ func (a *App) Start() {
 	ctx, stop := signal.NotifyContext(a.ctx, os.Interrupt, syscall.SIGTERM, syscall.SIGQUIT)
 	defer stop()
 
-	ip := flag.String("ip", "127.0.0.1", "IP address")
-	port := flag.String("port", "8080", "Port number")
+	conf, err := config.Init()
+	if err != nil {
+		log.Panicln(err.Error())
+	}
+
+	db, err := pgconnect.NewDB(ctx, conf.DB)
+	if err != nil {
+		log.Panicln(err.Error())
+	}
+	repo := repository.New(db)
+
+	ip := flag.String("ip", conf.HTTP.Host, "IP address")
+	port := flag.String("port", conf.HTTP.Port, "Port number")
 	flag.Parse()
 
-	h := handler.New()
+	h := handler.New(ctx, repo)
 	addr := fmt.Sprintf("%v:%v", *ip, *port)
 	server := &http.Server{
 		Addr:              addr,
