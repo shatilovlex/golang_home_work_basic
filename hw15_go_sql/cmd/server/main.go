@@ -2,12 +2,16 @@ package main
 
 import (
 	"context"
+	"log"
 
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/server/app"
 )
 
 func main() {
 	ctx := context.Background()
-	mainApp := app.NewApp(ctx)
+	mainApp, err := app.NewApp(ctx)
+	if err != nil {
+		log.Panicln(err.Error())
+	}
 	mainApp.Start()
 }

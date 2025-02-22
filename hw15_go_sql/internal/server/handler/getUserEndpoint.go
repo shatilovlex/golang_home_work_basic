@@ -3,35 +3,41 @@ package handler
 import (
 	"context"
 	"encoding/json"
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/repository"
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/usecase"
 	"net/http"
 	"strconv"
+
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/repository"
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/usecase"
 )
 
-type Handler struct {
-	ctx  context.Context
-	repo repository.Querier
+type GetUsersEndpoint interface {
+	GetUsers(ctx context.Context, arg usecase.Params) ([]*repository.UsersRow, error)
+	GetUsersHandler(w http.ResponseWriter, r *http.Request)
 }
 
-func New(c context.Context, r repository.Querier) *Handler {
-	return &Handler{
-		ctx:  c,
-		repo: r,
+type getUsersEndpoint struct {
+	ctx     context.Context
+	useCase usecase.GetUsersUseCaseInterface
+}
+
+func NewGetUsersEndpoint(ctx context.Context, useCase usecase.GetUsersUseCaseInterface) GetUsersEndpoint {
+	return &getUsersEndpoint{
+		ctx:     ctx,
+		useCase: useCase,
 	}
 }
 
-func (h Handler) InitMux() http.Handler {
-	mux := http.NewServeMux()
+func (e *getUsersEndpoint) GetUsers(ctx context.Context, arg usecase.Params) ([]*repository.UsersRow, error) {
+	usersRow, err := e.useCase.GetUsers(ctx, arg)
 
-	mux.HandleFunc("/users", func(w http.ResponseWriter, r *http.Request) {
-		h.Users(w, r)
-	})
+	if err != nil {
+		return nil, err
+	}
 
-	return mux
+	return usersRow, nil
 }
 
-func (h Handler) Users(w http.ResponseWriter, r *http.Request) {
+func (e *getUsersEndpoint) GetUsersHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
@@ -64,8 +70,7 @@ func (h Handler) Users(w http.ResponseWriter, r *http.Request) {
 		Offset: offset,
 	}
 
-	uc := usecase.New(h.repo)
-	res, err := uc.Users(h.ctx, params)
+	res, err := e.GetUsers(e.ctx, params)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)

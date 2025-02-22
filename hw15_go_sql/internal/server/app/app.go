@@ -12,44 +12,55 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/config"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/repository"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/server/handler"
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/usecase"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/pkg/pgconnect"
 )
 
 type App struct {
-	ctx context.Context
+	ctx    context.Context
+	config *config.Cfg
+	db     *pgxpool.Pool
 }
 
-func NewApp(ctx context.Context) *App {
-	return &App{ctx: ctx}
+func NewApp(ctx context.Context) (*App, error) {
+	conf, err := config.Init()
+	if err != nil {
+		return nil, err
+	}
+
+	db, err := pgconnect.NewDB(ctx, conf.DB)
+	if err != nil {
+		return nil, err
+	}
+
+	return &App{
+		ctx:    ctx,
+		config: conf,
+		db:     db,
+	}, nil
 }
 
 func (a *App) Start() {
 	ctx, stop := signal.NotifyContext(a.ctx, os.Interrupt, syscall.SIGTERM, syscall.SIGQUIT)
 	defer stop()
 
-	conf, err := config.Init()
-	if err != nil {
-		log.Panicln(err.Error())
-	}
+	querier := repository.New(a.db)
 
-	db, err := pgconnect.NewDB(ctx, conf.DB)
-	if err != nil {
-		log.Panicln(err.Error())
-	}
-	repo := repository.New(db)
-
-	ip := flag.String("ip", conf.HTTP.Host, "IP address")
-	port := flag.String("port", conf.HTTP.Port, "Port number")
+	ip := flag.String("ip", a.config.HTTP.Host, "IP address")
+	port := flag.String("port", a.config.HTTP.Port, "Port number")
 	flag.Parse()
 
-	h := handler.New(ctx, repo)
+	ucGetUsers := usecase.NewGetUsersUseCase(querier)
+	endpoint := handler.NewGetUsersEndpoint(ctx, ucGetUsers)
+
 	addr := fmt.Sprintf("%v:%v", *ip, *port)
 	server := &http.Server{
 		Addr:              addr,
-		Handler:           h.InitMux(),
+		Handler:           a.InitMux(endpoint),
 		ReadHeaderTimeout: 2 * time.Second,
 	}
 	go func() {
@@ -68,4 +79,12 @@ func (a *App) Start() {
 		log.Printf("error while shutting down http server: %s", err)
 	}
 	log.Println("final")
+}
+
+func (a *App) InitMux(endpoint handler.GetUsersEndpoint) http.Handler {
+	mux := http.NewServeMux()
+
+	mux.HandleFunc("/users", endpoint.GetUsersHandler)
+
+	return mux
 }

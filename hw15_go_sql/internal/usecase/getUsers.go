@@ -3,17 +3,20 @@ package usecase
 import (
 	"context"
 	"fmt"
+
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/repository"
 )
+
+type GetUsersUseCaseInterface interface {
+	GetUsers(ctx context.Context, arg Params) ([]*repository.UsersRow, error)
+}
 
 type GetUsersUseCase struct {
 	querier repository.Querier
 }
 
-func New(q repository.Querier) *GetUsersUseCase {
-	return &GetUsersUseCase{
-		querier: q,
-	}
+func NewGetUsersUseCase(querier repository.Querier) *GetUsersUseCase {
+	return &GetUsersUseCase{querier: querier}
 }
 
 type Params struct {
@@ -21,7 +24,7 @@ type Params struct {
 	Offset int64 `db:"offset"`
 }
 
-func (uc GetUsersUseCase) Users(ctx context.Context, arg Params) ([]*repository.UsersRow, error) {
+func (uc GetUsersUseCase) GetUsers(ctx context.Context, arg Params) ([]*repository.UsersRow, error) {
 	p := Params{
 		Limit:  10,
 		Offset: 0,
