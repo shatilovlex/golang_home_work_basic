@@ -1,4 +1,4 @@
-package handler
+package shopEndpoint
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/usecase"
 )
 
-type GetUsersEndpoint interface {
+type ShopEndpoint interface {
 	GetUsers(ctx context.Context, arg usecase.Params) ([]*repository.UsersRow, error)
 	GetUsersHandler(w http.ResponseWriter, r *http.Request)
 }
@@ -20,7 +20,7 @@ type getUsersEndpoint struct {
 	useCase usecase.GetUsersUseCaseInterface
 }
 
-func NewGetUsersEndpoint(ctx context.Context, useCase usecase.GetUsersUseCaseInterface) GetUsersEndpoint {
+func NewGetUsersEndpoint(ctx context.Context, useCase usecase.GetUsersUseCaseInterface) ShopEndpoint {
 	return &getUsersEndpoint{
 		ctx:     ctx,
 		useCase: useCase,
