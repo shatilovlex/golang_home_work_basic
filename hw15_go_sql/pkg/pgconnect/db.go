@@ -28,7 +28,7 @@ func NewDB(ctx context.Context, dbCfg config.DB) (*pgxpool.Pool, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to DB : %w", err)
 	}
-	if err := dbc.Ping(ctx); err != nil {
+	if err = dbc.Ping(ctx); err != nil {
 		return nil, fmt.Errorf("failed to ping DB: %w", err)
 	}
 
