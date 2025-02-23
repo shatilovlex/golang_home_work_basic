@@ -1,32 +1,27 @@
 package usecase
 
 import (
-	"context"
 	"fmt"
 
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/db"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/repository"
 )
 
 type ShopUsersUseCaseInterface interface {
-	GetUsers(ctx context.Context, arg Params) ([]*repository.UsersRow, error)
-	CreateUser(ctx context.Context, arg UserCreateParams) (int32, error)
+	GetUsers(arg repository.Params) ([]*db.UsersRow, error)
+	CreateUser(arg repository.UserCreateParams) (int32, error)
 }
 
 type ShopUsersUseCase struct {
-	querier repository.Querier
+	repo repository.ShopUserRepositoryInterface
 }
 
-func NewShopUsersUseCase(querier repository.Querier) *ShopUsersUseCase {
-	return &ShopUsersUseCase{querier: querier}
+func NewShopUsersUseCase(repo repository.ShopUserRepositoryInterface) *ShopUsersUseCase {
+	return &ShopUsersUseCase{repo: repo}
 }
 
-type Params struct {
-	Limit  int64 `db:"limit"`
-	Offset int64 `db:"offset"`
-}
-
-func (uc ShopUsersUseCase) GetUsers(ctx context.Context, arg Params) ([]*repository.UsersRow, error) {
-	p := Params{
+func (uc ShopUsersUseCase) GetUsers(arg repository.Params) ([]*db.UsersRow, error) {
+	p := repository.Params{
 		Limit:  10,
 		Offset: 0,
 	}
@@ -41,25 +36,8 @@ func (uc ShopUsersUseCase) GetUsers(ctx context.Context, arg Params) ([]*reposit
 		return nil, fmt.Errorf("offset must be greater or equal to zero")
 	}
 
-	params := repository.UsersParams{
-		Limit:  p.Limit,
-		Offset: p.Offset,
-	}
-
-	return uc.querier.Users(ctx, params)
+	return uc.repo.Users(p)
 }
-
-type UserCreateParams struct {
-	Name     *string `db:"name" json:"name"`
-	Email    *string `db:"email" json:"email"`
-	Password *string `db:"password" json:"password"`
-}
-
-func (uc ShopUsersUseCase) CreateUser(ctx context.Context, arg UserCreateParams) (int32, error) {
-	params := repository.UserCreateParams{
-		Name:     arg.Name,
-		Email:    arg.Email,
-		Password: arg.Password,
-	}
-	return uc.querier.UserCreate(ctx, params)
+func (uc ShopUsersUseCase) CreateUser(arg repository.UserCreateParams) (int32, error) {
+	return uc.repo.UserCreate(arg)
 }

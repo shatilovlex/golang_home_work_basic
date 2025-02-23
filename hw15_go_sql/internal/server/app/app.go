@@ -14,6 +14,7 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/config"
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/db"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/repository"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/server/handler"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/server/handler/shopendpoint"
@@ -49,14 +50,15 @@ func (a *App) Start() {
 	ctx, stop := signal.NotifyContext(a.ctx, os.Interrupt, syscall.SIGTERM, syscall.SIGQUIT)
 	defer stop()
 
-	querier := repository.New(a.db)
+	querier := db.New(a.db)
+	repo := repository.NewRepository(ctx, querier)
 
 	ip := flag.String("ip", a.config.HTTP.Host, "IP address")
 	port := flag.String("port", a.config.HTTP.Port, "Port number")
 	flag.Parse()
 
-	ucGetUsers := usecase.NewShopUsersUseCase(querier)
-	endpoint := shopendpoint.NewShopEndpoint(ctx, ucGetUsers)
+	ucGetUsers := usecase.NewShopUsersUseCase(repo)
+	endpoint := shopendpoint.NewShopEndpoint(ucGetUsers)
 
 	addr := fmt.Sprintf("%v:%v", *ip, *port)
 	server := &http.Server{

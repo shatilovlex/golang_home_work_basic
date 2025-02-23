@@ -1,37 +1,35 @@
 package shopendpoint
 
 import (
-	"context"
 	"encoding/json"
 	"io"
 	"net/http"
 	"strconv"
 
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/db"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/repository"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/usecase"
 )
 
 type Shopendpoint interface {
-	GetUsers(ctx context.Context, arg usecase.Params) ([]*repository.UsersRow, error)
+	GetUsers(arg repository.Params) ([]*db.UsersRow, error)
 	GetUsersHandler(w http.ResponseWriter, r *http.Request)
-	CreateUser(ctx context.Context, arg usecase.UserCreateParams) (int32, error)
+	CreateUser(arg repository.UserCreateParams) (int32, error)
 	CreateUserHandler(w http.ResponseWriter, r *http.Request)
 }
 
 type getShopEndpoint struct {
-	ctx     context.Context
 	useCase usecase.ShopUsersUseCaseInterface
 }
 
-func NewShopEndpoint(ctx context.Context, useCase usecase.ShopUsersUseCaseInterface) Shopendpoint {
+func NewShopEndpoint(useCase usecase.ShopUsersUseCaseInterface) Shopendpoint {
 	return &getShopEndpoint{
-		ctx:     ctx,
 		useCase: useCase,
 	}
 }
 
-func (e *getShopEndpoint) GetUsers(ctx context.Context, arg usecase.Params) ([]*repository.UsersRow, error) {
-	return e.useCase.GetUsers(ctx, arg)
+func (e *getShopEndpoint) GetUsers(arg repository.Params) ([]*db.UsersRow, error) {
+	return e.useCase.GetUsers(arg)
 }
 
 func (e *getShopEndpoint) GetUsersHandler(w http.ResponseWriter, r *http.Request) {
@@ -42,7 +40,7 @@ func (e *getShopEndpoint) GetUsersHandler(w http.ResponseWriter, r *http.Request
 	var (
 		limit  int64 = 10
 		offset int64
-		res    []*repository.UsersRow
+		res    []*db.UsersRow
 		err    error
 	)
 	limitRaw := r.URL.Query().Get("limit")
@@ -63,12 +61,12 @@ func (e *getShopEndpoint) GetUsersHandler(w http.ResponseWriter, r *http.Request
 		}
 	}
 
-	params := usecase.Params{
+	params := repository.Params{
 		Limit:  limit,
 		Offset: offset,
 	}
 
-	res, err = e.GetUsers(e.ctx, params)
+	res, err = e.GetUsers(params)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -88,8 +86,8 @@ func (e *getShopEndpoint) GetUsersHandler(w http.ResponseWriter, r *http.Request
 	}
 }
 
-func (e *getShopEndpoint) CreateUser(ctx context.Context, arg usecase.UserCreateParams) (int32, error) {
-	return e.useCase.CreateUser(ctx, arg)
+func (e *getShopEndpoint) CreateUser(arg repository.UserCreateParams) (int32, error) {
+	return e.useCase.CreateUser(arg)
 }
 
 func (e getShopEndpoint) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
@@ -104,7 +102,7 @@ func (e getShopEndpoint) CreateUserHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	var userCreateParams usecase.UserCreateParams
+	var userCreateParams repository.UserCreateParams
 
 	err = json.Unmarshal(body, &userCreateParams)
 	if err != nil {
@@ -112,7 +110,7 @@ func (e getShopEndpoint) CreateUserHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	_, err = e.CreateUser(e.ctx, userCreateParams)
+	_, err = e.CreateUser(userCreateParams)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
