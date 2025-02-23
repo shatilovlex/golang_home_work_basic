@@ -11,23 +11,23 @@ import (
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/usecase"
 )
 
-type Shopendpoint interface {
+type UserEndpoint interface {
 	GetUsersHandler(w http.ResponseWriter, r *http.Request)
 	CreateUserHandler(w http.ResponseWriter, r *http.Request)
 	UpdateUserHandler(w http.ResponseWriter, r *http.Request)
 }
 
-type getShopEndpoint struct {
+type getUserEndpoint struct {
 	useCase usecase.ShopUsersUseCaseInterface
 }
 
-func NewShopEndpoint(useCase usecase.ShopUsersUseCaseInterface) Shopendpoint {
-	return &getShopEndpoint{
+func NewUserEndpoint(useCase usecase.ShopUsersUseCaseInterface) UserEndpoint {
+	return &getUserEndpoint{
 		useCase: useCase,
 	}
 }
 
-func (e *getShopEndpoint) GetUsersHandler(w http.ResponseWriter, r *http.Request) {
+func (e *getUserEndpoint) GetUsersHandler(w http.ResponseWriter, r *http.Request) {
 	var (
 		limit  int64 = 10
 		offset int64
@@ -81,7 +81,7 @@ func (e *getShopEndpoint) GetUsersHandler(w http.ResponseWriter, r *http.Request
 	}
 }
 
-func (e getShopEndpoint) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
+func (e getUserEndpoint) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -128,7 +128,7 @@ func (e getShopEndpoint) CreateUserHandler(w http.ResponseWriter, r *http.Reques
 	}
 }
 
-func (e getShopEndpoint) UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
+func (e getUserEndpoint) UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)

@@ -49,19 +49,22 @@ func (a *App) Start() {
 	ctx, stop := signal.NotifyContext(a.ctx, os.Interrupt, syscall.SIGTERM, syscall.SIGQUIT)
 	defer stop()
 
-	repo := repository.NewShopUserRepository(ctx, a.db)
-
 	ip := flag.String("ip", a.config.HTTP.Host, "IP address")
 	port := flag.String("port", a.config.HTTP.Port, "Port number")
 	flag.Parse()
 
-	ucGetUsers := usecase.NewShopUsersUseCase(repo)
-	endpoint := shopendpoint.NewShopEndpoint(ucGetUsers)
+	userRepository := repository.NewShopUserRepository(ctx, a.db)
+	usersUseCase := usecase.NewShopUsersUseCase(userRepository)
+	userEndpoint := shopendpoint.NewUserEndpoint(usersUseCase)
+
+	productRepository := repository.NewShopProductRepository(ctx, a.db)
+	productsUseCase := usecase.NewShopProductUseCase(productRepository)
+	productEndpoint := shopendpoint.NewProductEndpoint(productsUseCase)
 
 	addr := fmt.Sprintf("%v:%v", *ip, *port)
 	server := &http.Server{
 		Addr:              addr,
-		Handler:           a.InitMux(endpoint),
+		Handler:           a.InitMux(userEndpoint, productEndpoint),
 		ReadHeaderTimeout: 2 * time.Second,
 	}
 	go func() {
@@ -82,10 +85,13 @@ func (a *App) Start() {
 	log.Println("final")
 }
 
-func (a *App) InitMux(endpoint shopendpoint.Shopendpoint) http.Handler {
+// todo move to new handler struct
+func (a *App) InitMux(userEndpoint shopendpoint.UserEndpoint, productEndpoint shopendpoint.ProductEndpoint) http.Handler {
 	mux := http.NewServeMux()
 
-	handler.MakeShopHandlers(mux, endpoint)
+	handler.MakeShopHandlers(mux, userEndpoint)
+
+	handler.MakeProductHandlers(mux, productEndpoint)
 
 	return mux
 }
