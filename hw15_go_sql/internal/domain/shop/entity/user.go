@@ -1,5 +1,7 @@
 package entity
 
+import "errors"
+
 type User struct {
 	ID       int32  `db:"id" json:"id"`
 	Name     string `db:"name" json:"name"`
@@ -22,3 +24,5 @@ type Params struct {
 	Limit  int64
 	Offset int64
 }
+
+var ErrUserNotFound = errors.New("user not found")

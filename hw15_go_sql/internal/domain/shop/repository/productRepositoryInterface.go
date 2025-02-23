@@ -7,4 +7,5 @@ import (
 type ShopProductRepositoryInterface interface {
 	Products(arg entity.Params) ([]*entity.Product, error)
 	CreateProduct(arg entity.ProductCreateParams) (*entity.Product, error)
+	GetProductByID(id int32) (*entity.Product, error)
 }

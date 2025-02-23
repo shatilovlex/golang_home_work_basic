@@ -27,34 +27,38 @@ func NewShopUserRepositoryStub(shopUsers []*entity.User) ShopUserRepositoryStub 
 	}
 }
 
-func (s ShopUserRepositoryStub) Users(_ entity.Params) ([]*entity.User, error) {
+func (r ShopUserRepositoryStub) GetUserByID(id int32) (*entity.User, error) {
+	return r.shopUsers[id], nil
+}
+
+func (r ShopUserRepositoryStub) Users(_ entity.Params) ([]*entity.User, error) {
 	shopUsers := []*entity.User{}
 
-	for _, shopUser := range s.shopUsers {
+	for _, shopUser := range r.shopUsers {
 		shopUsers = append(shopUsers, shopUser)
 	}
 
 	return shopUsers, nil
 }
 
-func (s ShopUserRepositoryStub) UserCreate(arg entity.UserCreateParams) (*entity.User, error) {
-	s.index++
+func (r ShopUserRepositoryStub) UserCreate(arg entity.UserCreateParams) (*entity.User, error) {
+	r.index++
 	shopUser := &entity.User{
-		ID:       s.index,
+		ID:       r.index,
 		Name:     arg.Name,
 		Email:    arg.Email,
 		Password: arg.Password,
 	}
-	s.shopUsers[s.index] = shopUser
+	r.shopUsers[r.index] = shopUser
 	return shopUser, nil
 }
 
-func (s ShopUserRepositoryStub) UserUpdate(arg entity.UserUpdateParams) (*entity.User, error) {
-	s.shopUsers[arg.ID] = &entity.User{
+func (r ShopUserRepositoryStub) UserUpdate(arg entity.UserUpdateParams) (*entity.User, error) {
+	r.shopUsers[arg.ID] = &entity.User{
 		Name: arg.Name,
 	}
 
-	return s.shopUsers[arg.ID], nil
+	return r.shopUsers[arg.ID], nil
 }
 
 func TestShopUsersUseCase_GetUsers(t *testing.T) {

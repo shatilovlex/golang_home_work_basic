@@ -20,7 +20,7 @@ func NewShopUserRepository(ctx context.Context, connect *pgxpool.Pool) ShopUserR
 	return ShopUserRepository{ctx: ctx, querier: querier, connect: connect}
 }
 
-func (r ShopUserRepository) getUser(id int32) (*entity.User, error) {
+func (r ShopUserRepository) GetUserByID(id int32) (*entity.User, error) {
 	item := entity.User{}
 	err := r.connect.QueryRow(
 		r.ctx,
@@ -50,7 +50,7 @@ func (r ShopUserRepository) UserCreate(arg entity.UserCreateParams) (*entity.Use
 		return nil, err
 	}
 
-	return r.getUser(id)
+	return r.GetUserByID(id)
 }
 
 func (r ShopUserRepository) Users(arg entity.Params) ([]*entity.User, error) {
@@ -98,5 +98,5 @@ func (r ShopUserRepository) UserUpdate(arg entity.UserUpdateParams) (*entity.Use
 		return nil, err
 	}
 
-	return r.getUser(id)
+	return r.GetUserByID(id)
 }

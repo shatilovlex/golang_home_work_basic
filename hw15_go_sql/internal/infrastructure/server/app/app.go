@@ -61,9 +61,13 @@ func (a *App) Start() {
 	productsUseCase := usecase.NewShopProductUseCase(productRepository)
 	productEndpoint := shopendpoint.NewProductEndpoint(productsUseCase)
 
+	orderUseCase := usecase.NewShopOrderUseCase(ctx, a.db, userRepository, productRepository)
+	orderEndpoint := shopendpoint.NewCreateOrderEndpoint(orderUseCase)
+
 	mux := http.NewServeMux()
 	handler.MakeShopHandlers(mux, userEndpoint)
 	handler.MakeProductHandlers(mux, productEndpoint)
+	handler.MakeOrderHandlers(mux, orderEndpoint)
 
 	addr := fmt.Sprintf("%v:%v", *ip, *port)
 	server := &http.Server{

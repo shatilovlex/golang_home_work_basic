@@ -6,6 +6,8 @@ import (
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/infrastructure/server/handler/shopendpoint"
 )
 
+const POST = "POST"
+
 func MakeShopHandlers(r *http.ServeMux, service shopendpoint.UserEndpoint) {
 	r.Handle("/users", shopUsers(service))
 }
@@ -13,7 +15,7 @@ func MakeShopHandlers(r *http.ServeMux, service shopendpoint.UserEndpoint) {
 func shopUsers(service shopendpoint.UserEndpoint) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
-		case "POST":
+		case POST:
 			service.CreateUserHandler(w, r)
 		case "GET":
 			service.GetUsersHandler(w, r)
@@ -32,10 +34,25 @@ func MakeProductHandlers(r *http.ServeMux, service shopendpoint.ProductEndpoint)
 func shopProducts(service shopendpoint.ProductEndpoint) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
-		case "POST":
+		case POST:
 			service.CreateProductHandler(w, r)
 		case "GET":
 			service.GetProductHandler(w, r)
+		default:
+			w.WriteHeader(http.StatusMethodNotAllowed)
+		}
+	})
+}
+
+func MakeOrderHandlers(r *http.ServeMux, service shopendpoint.CreateOrderEndpoint) {
+	r.Handle("/order", shopOrder(service))
+}
+
+func shopOrder(service shopendpoint.CreateOrderEndpoint) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case POST:
+			service.CreateOrder(w, r)
 		default:
 			w.WriteHeader(http.StatusMethodNotAllowed)
 		}

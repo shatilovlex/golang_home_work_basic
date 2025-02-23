@@ -8,4 +8,5 @@ type ShopUserRepositoryInterface interface {
 	Users(arg entity.Params) ([]*entity.User, error)
 	UserCreate(arg entity.UserCreateParams) (*entity.User, error)
 	UserUpdate(arg entity.UserUpdateParams) (*entity.User, error)
+	GetUserByID(id int32) (*entity.User, error)
 }

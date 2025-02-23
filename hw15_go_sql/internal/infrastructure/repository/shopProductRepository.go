@@ -20,7 +20,7 @@ func NewShopProductRepository(ctx context.Context, connect *pgxpool.Pool) ShopPr
 	return ShopProductRepository{ctx: ctx, querier: querier, connect: connect}
 }
 
-func (r ShopProductRepository) getProduct(id int32) (*entity.Product, error) {
+func (r ShopProductRepository) GetProductByID(id int32) (*entity.Product, error) {
 	item := entity.Product{}
 	err := r.connect.QueryRow(
 		r.ctx,
@@ -77,5 +77,5 @@ func (r ShopProductRepository) CreateProduct(arg entity.ProductCreateParams) (*e
 		return nil, err
 	}
 
-	return r.getProduct(id)
+	return r.GetProductByID(id)
 }

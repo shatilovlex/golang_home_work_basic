@@ -12,6 +12,10 @@ type ProductProductRepositoryStub struct {
 	index    int32
 }
 
+func (r ProductProductRepositoryStub) GetProductByID(id int32) (*entity.Product, error) {
+	return r.products[id], nil
+}
+
 func NewProductRepositoryStub(products []*entity.Product) ProductProductRepositoryStub {
 	var idx int32
 	resMap := make(map[int32]*entity.Product, len(products))
@@ -27,24 +31,24 @@ func NewProductRepositoryStub(products []*entity.Product) ProductProductReposito
 	}
 }
 
-func (s ProductProductRepositoryStub) Products(_ entity.Params) ([]*entity.Product, error) {
+func (r ProductProductRepositoryStub) Products(_ entity.Params) ([]*entity.Product, error) {
 	products := []*entity.Product{}
 
-	for _, product := range s.products {
+	for _, product := range r.products {
 		products = append(products, product)
 	}
 
 	return products, nil
 }
 
-func (s ProductProductRepositoryStub) CreateProduct(arg entity.ProductCreateParams) (*entity.Product, error) {
-	s.index++
+func (r ProductProductRepositoryStub) CreateProduct(arg entity.ProductCreateParams) (*entity.Product, error) {
+	r.index++
 	product := &entity.Product{
-		ID:    s.index,
+		ID:    r.index,
 		Name:  arg.Name,
 		Price: arg.Price,
 	}
-	s.products[s.index] = product
+	r.products[r.index] = product
 	return product, nil
 }
 
