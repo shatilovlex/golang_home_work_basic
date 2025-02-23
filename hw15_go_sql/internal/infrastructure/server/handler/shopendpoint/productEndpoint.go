@@ -2,6 +2,7 @@ package shopendpoint
 
 import (
 	"encoding/json"
+	"io"
 	"log"
 	"net/http"
 	"strconv"
@@ -12,6 +13,7 @@ import (
 
 type ProductEndpoint interface {
 	GetProductHandler(w http.ResponseWriter, r *http.Request)
+	CreateProductHandler(w http.ResponseWriter, r *http.Request)
 }
 
 type getProductEndpoint struct {
@@ -71,6 +73,53 @@ func (e *getProductEndpoint) GetProductHandler(w http.ResponseWriter, r *http.Re
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
+	_, err = w.Write(resBody)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf("get error: %v", err)
+	}
+}
+
+func (e *getProductEndpoint) CreateProductHandler(w http.ResponseWriter, r *http.Request) {
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		log.Printf("get error: %v", err)
+		return
+	}
+
+	var (
+		userCreateParams entity.ProductCreateParams
+		res              *entity.Product
+	)
+
+	err = json.Unmarshal(body, &userCreateParams)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf("get error: %v", err)
+		return
+	}
+
+	res, err = e.useCase.CreateProduct(userCreateParams)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf("get error: %v", err)
+		return
+	}
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf("get error: %v", err)
+		return
+	}
+	resBody, err := json.Marshal(res)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf("get error: %v", err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
 	_, err = w.Write(resBody)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)

@@ -20,10 +20,10 @@ func NewShopUserRepository(ctx context.Context, connect *pgxpool.Pool) ShopUserR
 	return ShopUserRepository{ctx: ctx, querier: querier, connect: connect}
 }
 
-func (u ShopUserRepository) getUser(id int32) (*entity.User, error) {
+func (r ShopUserRepository) getUser(id int32) (*entity.User, error) {
 	item := entity.User{}
-	err := u.connect.QueryRow(
-		u.ctx,
+	err := r.connect.QueryRow(
+		r.ctx,
 		"select id, name, email, password from pg_storage.shop.users where id = $1 limit 1",
 		id,
 	).Scan(&item.ID, &item.Name, &item.Email, &item.Password)
@@ -33,7 +33,7 @@ func (u ShopUserRepository) getUser(id int32) (*entity.User, error) {
 	return &item, nil
 }
 
-func (u ShopUserRepository) UserCreate(arg entity.UserCreateParams) (*entity.User, error) {
+func (r ShopUserRepository) UserCreate(arg entity.UserCreateParams) (*entity.User, error) {
 	var (
 		id  int32
 		err error
@@ -45,20 +45,20 @@ func (u ShopUserRepository) UserCreate(arg entity.UserCreateParams) (*entity.Use
 		Password: &arg.Password,
 	}
 
-	id, err = u.querier.UserCreate(u.ctx, params)
+	id, err = r.querier.UserCreate(r.ctx, params)
 	if err != nil {
 		return nil, err
 	}
 
-	return u.getUser(id)
+	return r.getUser(id)
 }
 
-func (u ShopUserRepository) Users(arg entity.Params) ([]*entity.User, error) {
+func (r ShopUserRepository) Users(arg entity.Params) ([]*entity.User, error) {
 	var (
 		rows pgx.Rows
 		err  error
 	)
-	rows, err = u.connect.Query(u.ctx, db.Users, arg.Limit, arg.Offset)
+	rows, err = r.connect.Query(r.ctx, db.Users, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
@@ -82,7 +82,7 @@ func (u ShopUserRepository) Users(arg entity.Params) ([]*entity.User, error) {
 	return items, nil
 }
 
-func (u ShopUserRepository) UserUpdate(arg entity.UserUpdateParams) (*entity.User, error) {
+func (r ShopUserRepository) UserUpdate(arg entity.UserUpdateParams) (*entity.User, error) {
 	var (
 		id  int32
 		err error
@@ -93,10 +93,10 @@ func (u ShopUserRepository) UserUpdate(arg entity.UserUpdateParams) (*entity.Use
 		Name: &arg.Name,
 	}
 
-	id, err = u.querier.UpdateUserName(u.ctx, params)
+	id, err = r.querier.UpdateUserName(r.ctx, params)
 	if err != nil {
 		return nil, err
 	}
 
-	return u.getUser(id)
+	return r.getUser(id)
 }

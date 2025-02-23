@@ -20,11 +20,11 @@ func NewShopProductRepository(ctx context.Context, connect *pgxpool.Pool) ShopPr
 	return ShopProductRepository{ctx: ctx, querier: querier, connect: connect}
 }
 
-func (u ShopProductRepository) getProduct(id int32) (*entity.Product, error) {
+func (r ShopProductRepository) getProduct(id int32) (*entity.Product, error) {
 	item := entity.Product{}
-	err := u.connect.QueryRow(
-		u.ctx,
-		"select id, name, price from pg_storage.shop.users where id = $1 limit 1",
+	err := r.connect.QueryRow(
+		r.ctx,
+		"select id, name, price from pg_storage.shop.products where id = $1 limit 1",
 		id,
 	).Scan(&item.ID, &item.Name, &item.Price)
 	if err != nil {
@@ -33,12 +33,12 @@ func (u ShopProductRepository) getProduct(id int32) (*entity.Product, error) {
 	return &item, nil
 }
 
-func (u ShopProductRepository) Products(arg entity.Params) ([]*entity.Product, error) {
+func (r ShopProductRepository) Products(arg entity.Params) ([]*entity.Product, error) {
 	var (
 		rows pgx.Rows
 		err  error
 	)
-	rows, err = u.connect.Query(u.ctx, db.Products, arg.Limit, arg.Offset)
+	rows, err = r.connect.Query(r.ctx, db.Products, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
@@ -59,4 +59,23 @@ func (u ShopProductRepository) Products(arg entity.Params) ([]*entity.Product, e
 		return nil, err
 	}
 	return items, nil
+}
+
+func (r ShopProductRepository) CreateProduct(arg entity.ProductCreateParams) (*entity.Product, error) {
+	var (
+		id  int32
+		err error
+	)
+
+	params := db.ProductCreateParams{
+		Name:  &arg.Name,
+		Price: &arg.Price,
+	}
+
+	id, err = r.querier.ProductCreate(r.ctx, params)
+	if err != nil {
+		return nil, err
+	}
+
+	return r.getProduct(id)
 }

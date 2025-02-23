@@ -32,6 +32,8 @@ func MakeProductHandlers(r *http.ServeMux, service shopendpoint.ProductEndpoint)
 func shopProducts(service shopendpoint.ProductEndpoint) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
+		case "POST":
+			service.CreateProductHandler(w, r)
 		case "GET":
 			service.GetProductHandler(w, r)
 		default:

@@ -9,6 +9,7 @@ import (
 
 type ShopProductUseCaseInterface interface {
 	GetProducts(arg entity.Params) ([]*entity.Product, error)
+	CreateProduct(arg entity.ProductCreateParams) (*entity.Product, error)
 }
 
 type ShopProductUseCase struct {
@@ -36,4 +37,8 @@ func (uc ShopProductUseCase) GetProducts(arg entity.Params) ([]*entity.Product, 
 	}
 
 	return uc.repo.Products(p)
+}
+
+func (uc ShopProductUseCase) CreateProduct(arg entity.ProductCreateParams) (*entity.Product, error) {
+	return uc.repo.CreateProduct(arg)
 }
