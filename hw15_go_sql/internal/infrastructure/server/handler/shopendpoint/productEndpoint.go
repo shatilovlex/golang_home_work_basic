@@ -2,12 +2,11 @@ package shopendpoint
 
 import (
 	"encoding/json"
-	"io"
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/shop/entity"
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/infrastructure/server/handler/shopendpoint/helper"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/usecase"
 )
 
@@ -28,101 +27,58 @@ func NewProductEndpoint(useCase usecase.ShopProductUseCaseInterface) ProductEndp
 
 func (e *getProductEndpoint) GetProductHandler(w http.ResponseWriter, r *http.Request) {
 	var (
-		limit  int64 = 10
-		offset int64
-		res    []*entity.Product
-		err    error
+		res []*entity.Product
+		err error
 	)
-	limitRaw := r.URL.Query().Get("limit")
-	offsetRaw := r.URL.Query().Get("offset")
-
-	if limitRaw != "" {
-		limit, err = strconv.ParseInt(limitRaw, 10, 64)
-		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			log.Printf("get error: %v", err)
-			return
-		}
-	}
-	if offsetRaw != "" {
-		offset, err = strconv.ParseInt(offsetRaw, 10, 64)
-		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			log.Printf("get error: %v", err)
-			return
-		}
-	}
-
-	params := entity.Params{
-		Limit:  limit,
-		Offset: offset,
+	params, err := helper.GetLimitParams(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		log.Printf("Error param: %v", err)
 	}
 
 	res, err = e.useCase.GetProducts(params)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Printf("get error: %v", err)
-		return
-	}
-	resBody, err := json.Marshal(res)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Printf("get error: %v", err)
+		http.Error(w, "Failed to get products", http.StatusInternalServerError)
+		log.Printf("Error getting products: %v", err)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	_, err = w.Write(resBody)
+	err = json.NewEncoder(w).Encode(res)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Printf("get error: %v", err)
+		log.Println("Error encoding response:", err)
+		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+		return
 	}
 }
 
 func (e *getProductEndpoint) CreateProductHandler(w http.ResponseWriter, r *http.Request) {
-	body, err := io.ReadAll(r.Body)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		log.Printf("get error: %v", err)
-		return
-	}
-
 	var (
-		userCreateParams entity.ProductCreateParams
-		res              *entity.Product
+		productCreateParams entity.ProductCreateParams
+		res                 *entity.Product
 	)
 
-	err = json.Unmarshal(body, &userCreateParams)
+	err := json.NewDecoder(r.Body).Decode(&productCreateParams)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Printf("get error: %v", err)
+		log.Println("Error decoding JSON:", err)
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
 
-	res, err = e.useCase.CreateProduct(userCreateParams)
+	res, err = e.useCase.CreateProduct(productCreateParams)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Printf("get error: %v", err)
-		return
-	}
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Printf("get error: %v", err)
-		return
-	}
-	resBody, err := json.Marshal(res)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Printf("get error: %v", err)
+		http.Error(w, "Failed to create product", http.StatusInternalServerError)
+		log.Printf("Error create product: %v", err)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	_, err = w.Write(resBody)
+	err = json.NewEncoder(w).Encode(res)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Printf("get error: %v", err)
+		log.Println("Error encoding response:", err)
+		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+		return
 	}
 }

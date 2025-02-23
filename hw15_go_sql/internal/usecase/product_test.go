@@ -27,7 +27,7 @@ func NewProductRepositoryStub(products []*entity.Product) ProductProductReposito
 	}
 }
 
-func (s ProductProductRepositoryStub) Products(arg entity.Params) ([]*entity.Product, error) {
+func (s ProductProductRepositoryStub) Products(_ entity.Params) ([]*entity.Product, error) {
 	products := []*entity.Product{}
 
 	for _, product := range s.products {

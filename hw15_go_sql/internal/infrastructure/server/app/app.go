@@ -61,10 +61,14 @@ func (a *App) Start() {
 	productsUseCase := usecase.NewShopProductUseCase(productRepository)
 	productEndpoint := shopendpoint.NewProductEndpoint(productsUseCase)
 
+	mux := http.NewServeMux()
+	handler.MakeShopHandlers(mux, userEndpoint)
+	handler.MakeProductHandlers(mux, productEndpoint)
+
 	addr := fmt.Sprintf("%v:%v", *ip, *port)
 	server := &http.Server{
 		Addr:              addr,
-		Handler:           a.InitMux(userEndpoint, productEndpoint),
+		Handler:           mux,
 		ReadHeaderTimeout: 2 * time.Second,
 	}
 	go func() {
@@ -83,15 +87,4 @@ func (a *App) Start() {
 		log.Printf("error while shutting down http server: %s", err)
 	}
 	log.Println("final")
-}
-
-// todo move to new handler struct
-func (a *App) InitMux(userEndpoint shopendpoint.UserEndpoint, productEndpoint shopendpoint.ProductEndpoint) http.Handler {
-	mux := http.NewServeMux()
-
-	handler.MakeShopHandlers(mux, userEndpoint)
-
-	handler.MakeProductHandlers(mux, productEndpoint)
-
-	return mux
 }
