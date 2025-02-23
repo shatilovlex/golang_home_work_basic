@@ -20,14 +20,37 @@ func NewRepository(ctx context.Context, connect *pgxpool.Pool) Repository {
 	return Repository{ctx: ctx, querier: querier, connect: connect}
 }
 
-func (u Repository) UserCreate(arg entity.UserCreateParams) (int32, error) {
+func (u Repository) getUser(id int32) (*entity.ShopUser, error) {
+	item := entity.ShopUser{}
+	err := u.connect.QueryRow(
+		u.ctx,
+		"select id, name, email, password from pg_storage.shop.users where id = $1 limit 1",
+		id,
+	).Scan(&item.ID, &item.Name, &item.Email, &item.Password)
+	if err != nil {
+		return nil, err
+	}
+	return &item, nil
+}
+
+func (u Repository) UserCreate(arg entity.UserCreateParams) (*entity.ShopUser, error) {
+	var (
+		id  int32
+		err error
+	)
+
 	params := db.UserCreateParams{
 		Name:     &arg.Name,
 		Email:    &arg.Email,
 		Password: &arg.Password,
 	}
 
-	return u.querier.UserCreate(u.ctx, params)
+	id, err = u.querier.UserCreate(u.ctx, params)
+	if err != nil {
+		return nil, err
+	}
+
+	return u.getUser(id)
 }
 
 func (u Repository) Users(arg entity.Params) ([]*entity.ShopUser, error) {
@@ -57,4 +80,23 @@ func (u Repository) Users(arg entity.Params) ([]*entity.ShopUser, error) {
 		return nil, err
 	}
 	return items, nil
+}
+
+func (u Repository) UserUpdate(arg entity.UserUpdateParams) (*entity.ShopUser, error) {
+	var (
+		id  int32
+		err error
+	)
+
+	params := db.UpdateUserNameParams{
+		ID:   arg.ID,
+		Name: &arg.Name,
+	}
+
+	id, err = u.querier.UpdateUserName(u.ctx, params)
+	if err != nil {
+		return nil, err
+	}
+
+	return u.getUser(id)
 }

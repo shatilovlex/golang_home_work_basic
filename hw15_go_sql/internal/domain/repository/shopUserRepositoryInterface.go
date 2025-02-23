@@ -6,5 +6,6 @@ import (
 
 type ShopUserRepositoryInterface interface {
 	Users(arg entity.Params) ([]*entity.ShopUser, error)
-	UserCreate(arg entity.UserCreateParams) (int32, error)
+	UserCreate(arg entity.UserCreateParams) (*entity.ShopUser, error)
+	UserUpdate(arg entity.UserUpdateParams) (*entity.ShopUser, error)
 }

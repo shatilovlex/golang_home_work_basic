@@ -3,6 +3,7 @@ package shopendpoint
 import (
 	"encoding/json"
 	"io"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -13,6 +14,7 @@ import (
 type Shopendpoint interface {
 	GetUsersHandler(w http.ResponseWriter, r *http.Request)
 	CreateUserHandler(w http.ResponseWriter, r *http.Request)
+	UpdateUserHandler(w http.ResponseWriter, r *http.Request)
 }
 
 type getShopEndpoint struct {
@@ -26,10 +28,6 @@ func NewShopEndpoint(useCase usecase.ShopUsersUseCaseInterface) Shopendpoint {
 }
 
 func (e *getShopEndpoint) GetUsersHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "GET" {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
 	var (
 		limit  int64 = 10
 		offset int64
@@ -43,6 +41,7 @@ func (e *getShopEndpoint) GetUsersHandler(w http.ResponseWriter, r *http.Request
 		limit, err = strconv.ParseInt(limitRaw, 10, 64)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
+			log.Printf("get error: %v", err)
 			return
 		}
 	}
@@ -50,6 +49,7 @@ func (e *getShopEndpoint) GetUsersHandler(w http.ResponseWriter, r *http.Request
 		offset, err = strconv.ParseInt(offsetRaw, 10, 64)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
+			log.Printf("get error: %v", err)
 			return
 		}
 	}
@@ -62,11 +62,13 @@ func (e *getShopEndpoint) GetUsersHandler(w http.ResponseWriter, r *http.Request
 	res, err = e.useCase.GetUsers(params)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf("get error: %v", err)
 		return
 	}
 	resBody, err := json.Marshal(res)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf("get error: %v", err)
 		return
 	}
 
@@ -75,33 +77,94 @@ func (e *getShopEndpoint) GetUsersHandler(w http.ResponseWriter, r *http.Request
 	_, err = w.Write(resBody)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf("get error: %v", err)
 	}
 }
 
 func (e getShopEndpoint) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
-
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		log.Printf("get error: %v", err)
 		return
 	}
 
-	var userCreateParams entity.UserCreateParams
+	var (
+		userCreateParams entity.UserCreateParams
+		res              *entity.ShopUser
+	)
 
 	err = json.Unmarshal(body, &userCreateParams)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf("get error: %v", err)
 		return
 	}
 
-	_, err = e.useCase.CreateUser(userCreateParams)
+	res, err = e.useCase.CreateUser(userCreateParams)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf("get error: %v", err)
 		return
 	}
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf("get error: %v", err)
+		return
+	}
+	resBody, err := json.Marshal(res)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf("get error: %v", err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
+	_, err = w.Write(resBody)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf("get error: %v", err)
+	}
+}
+
+func (e getShopEndpoint) UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		log.Printf("get error: %v", err)
+		return
+	}
+
+	var (
+		updateParams entity.UserUpdateParams
+		res          *entity.ShopUser
+	)
+	err = json.Unmarshal(body, &updateParams)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf("get error: %v", err)
+		return
+	}
+
+	res, err = e.useCase.UpdateUser(updateParams)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf("get error: %v", err)
+		return
+	}
+	resBody, err := json.Marshal(res)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf("get error: %v", err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	_, err = w.Write(resBody)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf("get error: %v", err)
+	}
 }

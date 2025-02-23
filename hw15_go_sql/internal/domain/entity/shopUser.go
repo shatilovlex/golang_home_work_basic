@@ -6,6 +6,10 @@ type ShopUser struct {
 	Email    string `db:"email" json:"email"`
 	Password string `db:"password" json:"password"`
 }
+type UserUpdateParams struct {
+	ID   int32  `json:"id"`
+	Name string `json:"name"`
+}
 
 type UserCreateParams struct {
 	Name     string `json:"name"`

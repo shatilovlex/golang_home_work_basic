@@ -9,7 +9,8 @@ import (
 
 type ShopUsersUseCaseInterface interface {
 	GetUsers(arg entity.Params) ([]*entity.ShopUser, error)
-	CreateUser(arg entity.UserCreateParams) (int32, error)
+	CreateUser(arg entity.UserCreateParams) (*entity.ShopUser, error)
+	UpdateUser(arg entity.UserUpdateParams) (*entity.ShopUser, error)
 }
 
 type ShopUsersUseCase struct {
@@ -39,6 +40,10 @@ func (uc ShopUsersUseCase) GetUsers(arg entity.Params) ([]*entity.ShopUser, erro
 	return uc.repo.Users(p)
 }
 
-func (uc ShopUsersUseCase) CreateUser(arg entity.UserCreateParams) (int32, error) {
+func (uc ShopUsersUseCase) CreateUser(arg entity.UserCreateParams) (*entity.ShopUser, error) {
 	return uc.repo.UserCreate(arg)
+}
+
+func (uc ShopUsersUseCase) UpdateUser(arg entity.UserUpdateParams) (*entity.ShopUser, error) {
+	return uc.repo.UserUpdate(arg)
 }

@@ -17,6 +17,8 @@ func shopUsers(service shopendpoint.Shopendpoint) http.Handler {
 			service.CreateUserHandler(w, r)
 		case "GET":
 			service.GetUsersHandler(w, r)
+		case "PUT":
+			service.UpdateUserHandler(w, r)
 		default:
 			w.WriteHeader(http.StatusMethodNotAllowed)
 		}
