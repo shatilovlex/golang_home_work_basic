@@ -49,7 +49,7 @@ func (a *App) Start() {
 	ctx, stop := signal.NotifyContext(a.ctx, os.Interrupt, syscall.SIGTERM, syscall.SIGQUIT)
 	defer stop()
 
-	repo := repository.NewRepository(ctx, a.db)
+	repo := repository.NewShopUserRepository(ctx, a.db)
 
 	ip := flag.String("ip", a.config.HTTP.Host, "IP address")
 	port := flag.String("port", a.config.HTTP.Port, "Port number")

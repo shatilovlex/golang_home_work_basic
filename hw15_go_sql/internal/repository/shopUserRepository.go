@@ -9,18 +9,18 @@ import (
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/entity"
 )
 
-type Repository struct {
+type ShopUserRepository struct {
 	ctx     context.Context
 	querier *db.Queries
 	connect *pgxpool.Pool
 }
 
-func NewRepository(ctx context.Context, connect *pgxpool.Pool) Repository {
+func NewShopUserRepository(ctx context.Context, connect *pgxpool.Pool) ShopUserRepository {
 	querier := db.New(connect)
-	return Repository{ctx: ctx, querier: querier, connect: connect}
+	return ShopUserRepository{ctx: ctx, querier: querier, connect: connect}
 }
 
-func (u Repository) getUser(id int32) (*entity.ShopUser, error) {
+func (u ShopUserRepository) getUser(id int32) (*entity.ShopUser, error) {
 	item := entity.ShopUser{}
 	err := u.connect.QueryRow(
 		u.ctx,
@@ -33,7 +33,7 @@ func (u Repository) getUser(id int32) (*entity.ShopUser, error) {
 	return &item, nil
 }
 
-func (u Repository) UserCreate(arg entity.UserCreateParams) (*entity.ShopUser, error) {
+func (u ShopUserRepository) UserCreate(arg entity.UserCreateParams) (*entity.ShopUser, error) {
 	var (
 		id  int32
 		err error
@@ -53,7 +53,7 @@ func (u Repository) UserCreate(arg entity.UserCreateParams) (*entity.ShopUser, e
 	return u.getUser(id)
 }
 
-func (u Repository) Users(arg entity.Params) ([]*entity.ShopUser, error) {
+func (u ShopUserRepository) Users(arg entity.Params) ([]*entity.ShopUser, error) {
 	var (
 		rows pgx.Rows
 		err  error
@@ -82,7 +82,7 @@ func (u Repository) Users(arg entity.Params) ([]*entity.ShopUser, error) {
 	return items, nil
 }
 
-func (u Repository) UserUpdate(arg entity.UserUpdateParams) (*entity.ShopUser, error) {
+func (u ShopUserRepository) UserUpdate(arg entity.UserUpdateParams) (*entity.ShopUser, error) {
 	var (
 		id  int32
 		err error
