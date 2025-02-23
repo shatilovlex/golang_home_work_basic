@@ -3,13 +3,13 @@ package usecase
 import (
 	"fmt"
 
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/db"
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/repository"
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/entity"
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/repository"
 )
 
 type ShopUsersUseCaseInterface interface {
-	GetUsers(arg repository.Params) ([]*db.UsersRow, error)
-	CreateUser(arg repository.UserCreateParams) (int32, error)
+	GetUsers(arg entity.Params) ([]*entity.ShopUser, error)
+	CreateUser(arg entity.UserCreateParams) (int32, error)
 }
 
 type ShopUsersUseCase struct {
@@ -20,8 +20,8 @@ func NewShopUsersUseCase(repo repository.ShopUserRepositoryInterface) *ShopUsers
 	return &ShopUsersUseCase{repo: repo}
 }
 
-func (uc ShopUsersUseCase) GetUsers(arg repository.Params) ([]*db.UsersRow, error) {
-	p := repository.Params{
+func (uc ShopUsersUseCase) GetUsers(arg entity.Params) ([]*entity.ShopUser, error) {
+	p := entity.Params{
 		Limit:  10,
 		Offset: 0,
 	}
@@ -38,6 +38,7 @@ func (uc ShopUsersUseCase) GetUsers(arg repository.Params) ([]*db.UsersRow, erro
 
 	return uc.repo.Users(p)
 }
-func (uc ShopUsersUseCase) CreateUser(arg repository.UserCreateParams) (int32, error) {
+
+func (uc ShopUsersUseCase) CreateUser(arg entity.UserCreateParams) (int32, error) {
 	return uc.repo.UserCreate(arg)
 }
