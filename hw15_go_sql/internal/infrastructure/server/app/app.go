@@ -13,10 +13,10 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/config"
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/repository"
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/server/handler"
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/server/handler/shopendpoint"
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/infrastructure/config"
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/infrastructure/repository"
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/infrastructure/server/handler"
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/infrastructure/server/handler/shopendpoint"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/usecase"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/pkg/pgconnect"
 )

@@ -8,7 +8,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/config"
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/infrastructure/config"
 )
 
 func NewDB(ctx context.Context, dbCfg config.DB) (*pgxpool.Pool, error) {

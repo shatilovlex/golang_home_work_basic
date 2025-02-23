@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/entity"
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/shop/entity"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/usecase"
 )
 
@@ -31,7 +31,7 @@ func (e *getUserEndpoint) GetUsersHandler(w http.ResponseWriter, r *http.Request
 	var (
 		limit  int64 = 10
 		offset int64
-		res    []*entity.ShopUser
+		res    []*entity.User
 		err    error
 	)
 	limitRaw := r.URL.Query().Get("limit")
@@ -91,7 +91,7 @@ func (e getUserEndpoint) CreateUserHandler(w http.ResponseWriter, r *http.Reques
 
 	var (
 		userCreateParams entity.UserCreateParams
-		res              *entity.ShopUser
+		res              *entity.User
 	)
 
 	err = json.Unmarshal(body, &userCreateParams)
@@ -138,7 +138,7 @@ func (e getUserEndpoint) UpdateUserHandler(w http.ResponseWriter, r *http.Reques
 
 	var (
 		updateParams entity.UserUpdateParams
-		res          *entity.ShopUser
+		res          *entity.User
 	)
 	err = json.Unmarshal(body, &updateParams)
 	if err != nil {

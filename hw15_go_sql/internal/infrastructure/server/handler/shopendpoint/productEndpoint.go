@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/entity"
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/shop/entity"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/usecase"
 )
 

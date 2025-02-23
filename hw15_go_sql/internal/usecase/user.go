@@ -3,14 +3,14 @@ package usecase
 import (
 	"fmt"
 
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/entity"
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/repository"
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/shop/entity"
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/shop/repository"
 )
 
 type ShopUsersUseCaseInterface interface {
-	GetUsers(arg entity.Params) ([]*entity.ShopUser, error)
-	CreateUser(arg entity.UserCreateParams) (*entity.ShopUser, error)
-	UpdateUser(arg entity.UserUpdateParams) (*entity.ShopUser, error)
+	GetUsers(arg entity.Params) ([]*entity.User, error)
+	CreateUser(arg entity.UserCreateParams) (*entity.User, error)
+	UpdateUser(arg entity.UserUpdateParams) (*entity.User, error)
 }
 
 type ShopUsersUseCase struct {
@@ -21,7 +21,7 @@ func NewShopUsersUseCase(repo repository.ShopUserRepositoryInterface) *ShopUsers
 	return &ShopUsersUseCase{repo: repo}
 }
 
-func (uc ShopUsersUseCase) GetUsers(arg entity.Params) ([]*entity.ShopUser, error) {
+func (uc ShopUsersUseCase) GetUsers(arg entity.Params) ([]*entity.User, error) {
 	p := entity.Params{
 		Limit:  10,
 		Offset: 0,
@@ -40,10 +40,10 @@ func (uc ShopUsersUseCase) GetUsers(arg entity.Params) ([]*entity.ShopUser, erro
 	return uc.repo.Users(p)
 }
 
-func (uc ShopUsersUseCase) CreateUser(arg entity.UserCreateParams) (*entity.ShopUser, error) {
+func (uc ShopUsersUseCase) CreateUser(arg entity.UserCreateParams) (*entity.User, error) {
 	return uc.repo.UserCreate(arg)
 }
 
-func (uc ShopUsersUseCase) UpdateUser(arg entity.UserUpdateParams) (*entity.ShopUser, error) {
+func (uc ShopUsersUseCase) UpdateUser(arg entity.UserUpdateParams) (*entity.User, error) {
 	return uc.repo.UserUpdate(arg)
 }

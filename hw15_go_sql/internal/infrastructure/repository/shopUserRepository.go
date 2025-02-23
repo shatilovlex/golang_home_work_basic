@@ -5,8 +5,8 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/db"
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/entity"
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/shop/entity"
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/infrastructure/db"
 )
 
 type ShopUserRepository struct {
@@ -20,8 +20,8 @@ func NewShopUserRepository(ctx context.Context, connect *pgxpool.Pool) ShopUserR
 	return ShopUserRepository{ctx: ctx, querier: querier, connect: connect}
 }
 
-func (u ShopUserRepository) getUser(id int32) (*entity.ShopUser, error) {
-	item := entity.ShopUser{}
+func (u ShopUserRepository) getUser(id int32) (*entity.User, error) {
+	item := entity.User{}
 	err := u.connect.QueryRow(
 		u.ctx,
 		"select id, name, email, password from pg_storage.shop.users where id = $1 limit 1",
@@ -33,7 +33,7 @@ func (u ShopUserRepository) getUser(id int32) (*entity.ShopUser, error) {
 	return &item, nil
 }
 
-func (u ShopUserRepository) UserCreate(arg entity.UserCreateParams) (*entity.ShopUser, error) {
+func (u ShopUserRepository) UserCreate(arg entity.UserCreateParams) (*entity.User, error) {
 	var (
 		id  int32
 		err error
@@ -53,7 +53,7 @@ func (u ShopUserRepository) UserCreate(arg entity.UserCreateParams) (*entity.Sho
 	return u.getUser(id)
 }
 
-func (u ShopUserRepository) Users(arg entity.Params) ([]*entity.ShopUser, error) {
+func (u ShopUserRepository) Users(arg entity.Params) ([]*entity.User, error) {
 	var (
 		rows pgx.Rows
 		err  error
@@ -63,9 +63,9 @@ func (u ShopUserRepository) Users(arg entity.Params) ([]*entity.ShopUser, error)
 		return nil, err
 	}
 	defer rows.Close()
-	items := []*entity.ShopUser{}
+	items := []*entity.User{}
 	for rows.Next() {
-		var i entity.ShopUser
+		var i entity.User
 		if err = rows.Scan(
 			&i.ID,
 			&i.Name,
@@ -82,7 +82,7 @@ func (u ShopUserRepository) Users(arg entity.Params) ([]*entity.ShopUser, error)
 	return items, nil
 }
 
-func (u ShopUserRepository) UserUpdate(arg entity.UserUpdateParams) (*entity.ShopUser, error) {
+func (u ShopUserRepository) UserUpdate(arg entity.UserUpdateParams) (*entity.User, error) {
 	var (
 		id  int32
 		err error

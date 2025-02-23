@@ -3,7 +3,7 @@ package handler
 import (
 	"net/http"
 
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/server/handler/shopendpoint"
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/infrastructure/server/handler/shopendpoint"
 )
 
 func MakeShopHandlers(r *http.ServeMux, service shopendpoint.UserEndpoint) {
