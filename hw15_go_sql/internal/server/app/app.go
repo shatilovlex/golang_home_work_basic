@@ -16,7 +16,7 @@ import (
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/config"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/repository"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/server/handler"
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/server/handler/shopEndpoint"
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/server/handler/shopendpoint"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/usecase"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/pkg/pgconnect"
 )
@@ -55,8 +55,8 @@ func (a *App) Start() {
 	port := flag.String("port", a.config.HTTP.Port, "Port number")
 	flag.Parse()
 
-	ucGetUsers := usecase.NewGetUsersUseCase(querier)
-	endpoint := shopEndpoint.NewGetUsersEndpoint(ctx, ucGetUsers)
+	ucGetUsers := usecase.NewShopUsersUseCase(querier)
+	endpoint := shopendpoint.NewShopEndpoint(ctx, ucGetUsers)
 
 	addr := fmt.Sprintf("%v:%v", *ip, *port)
 	server := &http.Server{
@@ -82,7 +82,7 @@ func (a *App) Start() {
 	log.Println("final")
 }
 
-func (a *App) InitMux(endpoint shopEndpoint.ShopEndpoint) http.Handler {
+func (a *App) InitMux(endpoint shopendpoint.Shopendpoint) http.Handler {
 	mux := http.NewServeMux()
 
 	handler.MakeShopHandlers(mux, endpoint)

@@ -2,10 +2,10 @@ package config
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/caarlos0/env/v11"
 	"github.com/joho/godotenv"
-	"log"
-	"os"
 )
 
 func Init() (*Cfg, error) {
@@ -27,17 +27,17 @@ func Init() (*Cfg, error) {
 }
 
 func load() error {
+	var err error
 	cfgEnv := os.Getenv("ENV_FILE")
 	if len(cfgEnv) > 0 {
-		err := godotenv.Load(cfgEnv)
-		if err != nil {
-			log.Fatalf("can't parse config: %v", err)
-		}
-	} else {
-		err := godotenv.Load(".env")
-		if err != nil {
-			log.Fatalf("can't parse config: %v", err)
-		}
+		err = godotenv.Load(cfgEnv)
+		return fmt.Errorf("can't parse config: %w", err)
 	}
+
+	err = godotenv.Load(".env")
+	if err != nil {
+		return fmt.Errorf("can't load .env: %w", err)
+	}
+
 	return nil
 }
