@@ -10,22 +10,15 @@ import (
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/usecase"
 )
 
-type ProductEndpoint interface {
-	GetProductHandler(w http.ResponseWriter, r *http.Request)
-	CreateProductHandler(w http.ResponseWriter, r *http.Request)
-}
-
-type getProductEndpoint struct {
+type ProductEndpoint struct {
 	useCase usecase.ShopProductUseCaseInterface
 }
 
-func NewProductEndpoint(useCase usecase.ShopProductUseCaseInterface) ProductEndpoint {
-	return &getProductEndpoint{
-		useCase: useCase,
-	}
+func NewProductEndpoint(useCase usecase.ShopProductUseCaseInterface) *ProductEndpoint {
+	return &ProductEndpoint{useCase: useCase}
 }
 
-func (e *getProductEndpoint) GetProductHandler(w http.ResponseWriter, r *http.Request) {
+func (e *ProductEndpoint) GetProductHandler(w http.ResponseWriter, r *http.Request) {
 	var (
 		res []*entity.Product
 		err error
@@ -53,10 +46,10 @@ func (e *getProductEndpoint) GetProductHandler(w http.ResponseWriter, r *http.Re
 	}
 }
 
-func (e *getProductEndpoint) CreateProductHandler(w http.ResponseWriter, r *http.Request) {
+func (e *ProductEndpoint) CreateProductHandler(w http.ResponseWriter, r *http.Request) {
 	var (
 		productCreateParams entity.ProductCreateParams
-		res                 *entity.Product
+		products            *entity.Product
 	)
 
 	err := json.NewDecoder(r.Body).Decode(&productCreateParams)
@@ -66,7 +59,7 @@ func (e *getProductEndpoint) CreateProductHandler(w http.ResponseWriter, r *http
 		return
 	}
 
-	res, err = e.useCase.CreateProduct(productCreateParams)
+	products, err = e.useCase.CreateProduct(productCreateParams)
 	if err != nil {
 		http.Error(w, "Failed to create product", http.StatusInternalServerError)
 		log.Printf("Error create product: %v", err)
@@ -75,10 +68,27 @@ func (e *getProductEndpoint) CreateProductHandler(w http.ResponseWriter, r *http
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	err = json.NewEncoder(w).Encode(res)
+	err = json.NewEncoder(w).Encode(products)
 	if err != nil {
 		log.Println("Error encoding response:", err)
 		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
 		return
 	}
+}
+
+func (e *ProductEndpoint) MakeHandler(r *http.ServeMux) {
+	r.Handle("/products", e.handle())
+}
+
+func (e *ProductEndpoint) handle() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodPost:
+			e.CreateProductHandler(w, r)
+		case http.MethodGet:
+			e.GetProductHandler(w, r)
+		default:
+			w.WriteHeader(http.StatusMethodNotAllowed)
+		}
+	})
 }

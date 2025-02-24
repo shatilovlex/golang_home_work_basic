@@ -9,21 +9,15 @@ import (
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/usecase"
 )
 
-type CreateOrderEndpoint interface {
-	CreateOrder(w http.ResponseWriter, r *http.Request)
-}
-
-type getCreateOrderEndpoint struct {
+type CreateOrderEndpoint struct {
 	useCase usecase.OrderUseCaseInterface
 }
 
-func NewCreateOrderEndpoint(useCase usecase.OrderUseCaseInterface) CreateOrderEndpoint {
-	return &getCreateOrderEndpoint{
-		useCase: useCase,
-	}
+func NewCreateOrderEndpoint(useCase usecase.OrderUseCaseInterface) *CreateOrderEndpoint {
+	return &CreateOrderEndpoint{useCase: useCase}
 }
 
-func (e *getCreateOrderEndpoint) CreateOrder(w http.ResponseWriter, r *http.Request) {
+func (e *CreateOrderEndpoint) CreateOrder(w http.ResponseWriter, r *http.Request) {
 	var createOrderParams entity.CreateOrderParams
 
 	err := json.NewDecoder(r.Body).Decode(&createOrderParams)
@@ -46,4 +40,19 @@ func (e *getCreateOrderEndpoint) CreateOrder(w http.ResponseWriter, r *http.Requ
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
+}
+
+func (e *CreateOrderEndpoint) MakeHandler(r *http.ServeMux) {
+	r.Handle("/order", e.handle())
+}
+
+func (e *CreateOrderEndpoint) handle() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodPost:
+			e.CreateOrder(w, r)
+		default:
+			w.WriteHeader(http.StatusMethodNotAllowed)
+		}
+	})
 }

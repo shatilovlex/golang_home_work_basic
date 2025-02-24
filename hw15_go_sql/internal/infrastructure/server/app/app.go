@@ -65,9 +65,8 @@ func (a *App) Start() {
 	orderEndpoint := shopendpoint.NewCreateOrderEndpoint(orderUseCase)
 
 	mux := http.NewServeMux()
-	handler.MakeShopHandlers(mux, userEndpoint)
-	handler.MakeProductHandlers(mux, productEndpoint)
-	handler.MakeOrderHandlers(mux, orderEndpoint)
+	maker := handler.NewMaker([]handler.Handler{userEndpoint, productEndpoint, orderEndpoint})
+	maker.MakeHandlers(mux)
 
 	addr := fmt.Sprintf("%v:%v", *ip, *port)
 	server := &http.Server{

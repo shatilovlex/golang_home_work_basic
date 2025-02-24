@@ -10,23 +10,15 @@ import (
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/usecase"
 )
 
-type UserEndpoint interface {
-	GetUsersHandler(w http.ResponseWriter, r *http.Request)
-	CreateUserHandler(w http.ResponseWriter, r *http.Request)
-	UpdateUserHandler(w http.ResponseWriter, r *http.Request)
-}
-
-type getUserEndpoint struct {
+type UserEndpoint struct {
 	useCase usecase.ShopUsersUseCaseInterface
 }
 
-func NewUserEndpoint(useCase usecase.ShopUsersUseCaseInterface) UserEndpoint {
-	return &getUserEndpoint{
-		useCase: useCase,
-	}
+func NewUserEndpoint(useCase usecase.ShopUsersUseCaseInterface) *UserEndpoint {
+	return &UserEndpoint{useCase: useCase}
 }
 
-func (e *getUserEndpoint) GetUsersHandler(w http.ResponseWriter, r *http.Request) {
+func (e UserEndpoint) GetUsersHandler(w http.ResponseWriter, r *http.Request) {
 	var res []*entity.User
 
 	params, err := helper.GetLimitParams(r)
@@ -52,10 +44,10 @@ func (e *getUserEndpoint) GetUsersHandler(w http.ResponseWriter, r *http.Request
 	}
 }
 
-func (e getUserEndpoint) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
+func (e UserEndpoint) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 	var (
 		userCreateParams entity.UserCreateParams
-		res              *entity.User
+		users            *entity.User
 	)
 
 	err := json.NewDecoder(r.Body).Decode(&userCreateParams)
@@ -65,7 +57,7 @@ func (e getUserEndpoint) CreateUserHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	res, err = e.useCase.CreateUser(userCreateParams)
+	users, err = e.useCase.CreateUser(userCreateParams)
 	if err != nil {
 		http.Error(w, "Failed to create user", http.StatusInternalServerError)
 		log.Printf("Error create user: %v", err)
@@ -74,7 +66,7 @@ func (e getUserEndpoint) CreateUserHandler(w http.ResponseWriter, r *http.Reques
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	err = json.NewEncoder(w).Encode(res)
+	err = json.NewEncoder(w).Encode(users)
 	if err != nil {
 		log.Println("Error encoding user response:", err)
 		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
@@ -82,7 +74,7 @@ func (e getUserEndpoint) CreateUserHandler(w http.ResponseWriter, r *http.Reques
 	}
 }
 
-func (e getUserEndpoint) UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
+func (e UserEndpoint) UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
 	var (
 		userUpdateParams entity.UserUpdateParams
 		res              *entity.User
@@ -111,4 +103,23 @@ func (e getUserEndpoint) UpdateUserHandler(w http.ResponseWriter, r *http.Reques
 		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
 		return
 	}
+}
+
+func (e UserEndpoint) MakeHandler(r *http.ServeMux) {
+	r.Handle("/users", e.handle())
+}
+
+func (e UserEndpoint) handle() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodPost:
+			e.CreateUserHandler(w, r)
+		case http.MethodGet:
+			e.GetUsersHandler(w, r)
+		case http.MethodPut:
+			e.UpdateUserHandler(w, r)
+		default:
+			w.WriteHeader(http.StatusMethodNotAllowed)
+		}
+	})
 }
