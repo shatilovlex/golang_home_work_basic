@@ -58,12 +58,12 @@ func (uc *ShopOrderUseCase) CreateOrder(params entity.CreateOrderParams) error {
 		return err
 	}
 
-	orderID, err = uc.NewOrder(params.UserID, totalAmount)
+	orderID, err = uc.newOrder(params.UserID, totalAmount)
 	if err != nil {
 		return err
 	}
 
-	err = uc.MassInsertOrderProducts(orderID, params.ProductIds)
+	err = uc.massInsertOrderProducts(orderID, params.ProductIds)
 	if err != nil {
 		return err
 	}
@@ -91,7 +91,7 @@ func (uc *ShopOrderUseCase) getTotalAmount(productIds []int32) (float64, error) 
 	return totalAmount, nil
 }
 
-func (uc *ShopOrderUseCase) NewOrder(userID int32, amount float64) (int32, error) {
+func (uc *ShopOrderUseCase) newOrder(userID int32, amount float64) (int32, error) {
 	row := uc.connect.QueryRow(
 		uc.ctx,
 		db.CreateOrder,
@@ -107,7 +107,7 @@ func (uc *ShopOrderUseCase) NewOrder(userID int32, amount float64) (int32, error
 	return id, err
 }
 
-func (uc *ShopOrderUseCase) MassInsertOrderProducts(orderID int32, productIds []int32) error {
+func (uc *ShopOrderUseCase) massInsertOrderProducts(orderID int32, productIds []int32) error {
 	for _, productID := range productIds {
 		_, err := uc.connect.Exec(uc.ctx, db.CreateOrderProduct, orderID, productID)
 		if err != nil {
