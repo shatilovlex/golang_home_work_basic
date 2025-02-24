@@ -75,6 +75,7 @@ func (r ShopUserRepository) Users(arg repository.Params) ([]*entity.User, error)
 		); err != nil {
 			return nil, err
 		}
+		i.Password = "secret"
 		items = append(items, &i)
 	}
 	if err = rows.Err(); err != nil {

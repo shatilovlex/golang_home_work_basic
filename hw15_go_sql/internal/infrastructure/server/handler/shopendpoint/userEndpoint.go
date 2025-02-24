@@ -19,7 +19,7 @@ func NewUserEndpoint(useCase usecase.ShopUsersUseCaseInterface) *UserEndpoint {
 	return &UserEndpoint{useCase: useCase}
 }
 
-func (e UserEndpoint) GetUsersHandler(w http.ResponseWriter, r *http.Request) {
+func (e *UserEndpoint) GetUsersHandler(w http.ResponseWriter, r *http.Request) {
 	var res []*entity.User
 
 	params, err := helper.GetLimitParams(r)
@@ -45,10 +45,11 @@ func (e UserEndpoint) GetUsersHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (e UserEndpoint) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
+func (e *UserEndpoint) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 	var (
 		userCreateParams repository.UserCreateParams
 		users            *entity.User
+		password         string
 	)
 
 	err := json.NewDecoder(r.Body).Decode(&userCreateParams)
@@ -57,6 +58,14 @@ func (e UserEndpoint) CreateUserHandler(w http.ResponseWriter, r *http.Request) 
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
+
+	password, err = helper.GeneratePassword(userCreateParams.Password)
+	if err != nil {
+		log.Println("Error generating password:", err)
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+	userCreateParams.Password = password
 
 	users, err = e.useCase.CreateUser(userCreateParams)
 	if err != nil {
@@ -75,7 +84,7 @@ func (e UserEndpoint) CreateUserHandler(w http.ResponseWriter, r *http.Request) 
 	}
 }
 
-func (e UserEndpoint) UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
+func (e *UserEndpoint) UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
 	var (
 		userUpdateParams repository.UserUpdateParams
 		res              *entity.User
@@ -106,11 +115,11 @@ func (e UserEndpoint) UpdateUserHandler(w http.ResponseWriter, r *http.Request) 
 	}
 }
 
-func (e UserEndpoint) MakeHandler(r *http.ServeMux) {
+func (e *UserEndpoint) MakeHandler(r *http.ServeMux) {
 	r.Handle("/users", e.handle())
 }
 
-func (e UserEndpoint) handle() http.Handler {
+func (e *UserEndpoint) handle() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodPost:
