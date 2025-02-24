@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/shop/entity"
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/shop/repository"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/infrastructure/server/handler/shopendpoint/helper"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/usecase"
 )
@@ -48,7 +49,7 @@ func (e *ProductEndpoint) GetProductHandler(w http.ResponseWriter, r *http.Reque
 
 func (e *ProductEndpoint) CreateProductHandler(w http.ResponseWriter, r *http.Request) {
 	var (
-		productCreateParams entity.ProductCreateParams
+		productCreateParams repository.ProductCreateParams
 		products            *entity.Product
 	)
 

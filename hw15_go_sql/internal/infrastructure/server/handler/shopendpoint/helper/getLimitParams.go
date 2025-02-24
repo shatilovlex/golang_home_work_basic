@@ -5,14 +5,14 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/shop/entity"
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/shop/repository"
 )
 
 var ErrInvalidLimitParam = errors.New("error getting limit")
 
 var ErrInvalidOffsetParam = errors.New("error getting offset")
 
-func GetLimitParams(r *http.Request) (entity.Params, error) {
+func GetLimitParams(r *http.Request) (repository.Params, error) {
 	var (
 		limit  int64 = 10
 		offset int64
@@ -25,17 +25,17 @@ func GetLimitParams(r *http.Request) (entity.Params, error) {
 	if limitRaw != "" {
 		limit, err = strconv.ParseInt(limitRaw, 10, 64)
 		if err != nil {
-			return entity.Params{}, ErrInvalidLimitParam
+			return repository.Params{}, ErrInvalidLimitParam
 		}
 	}
 	if offsetRaw != "" {
 		offset, err = strconv.ParseInt(offsetRaw, 10, 64)
 		if err != nil {
-			return entity.Params{}, ErrInvalidOffsetParam
+			return repository.Params{}, ErrInvalidOffsetParam
 		}
 	}
 
-	params := entity.Params{
+	params := repository.Params{
 		Limit:  limit,
 		Offset: offset,
 	}

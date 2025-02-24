@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/shop/entity"
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/shop/repository"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/infrastructure/server/handler/shopendpoint/helper"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/usecase"
 )
@@ -46,7 +47,7 @@ func (e UserEndpoint) GetUsersHandler(w http.ResponseWriter, r *http.Request) {
 
 func (e UserEndpoint) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 	var (
-		userCreateParams entity.UserCreateParams
+		userCreateParams repository.UserCreateParams
 		users            *entity.User
 	)
 
@@ -76,7 +77,7 @@ func (e UserEndpoint) CreateUserHandler(w http.ResponseWriter, r *http.Request) 
 
 func (e UserEndpoint) UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
 	var (
-		userUpdateParams entity.UserUpdateParams
+		userUpdateParams repository.UserUpdateParams
 		res              *entity.User
 		err              error
 	)

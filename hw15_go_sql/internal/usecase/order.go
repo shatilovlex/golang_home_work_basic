@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/jackc/pgx/v5"
@@ -10,6 +11,11 @@ import (
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/shop/entity"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/shop/repository"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/infrastructure/db"
+)
+
+var (
+	ErrUserNotFound    = errors.New("user not found")
+	ErrProductNotFound = errors.New("product not found")
 )
 
 type OrderUseCaseInterface interface {
@@ -46,7 +52,7 @@ func (uc *ShopOrderUseCase) CreateOrder(params entity.CreateOrderParams) error {
 
 	_, err = uc.userRepository.GetUserByID(params.UserID)
 	if err != nil {
-		return entity.ErrUserNotFound
+		return ErrUserNotFound
 	}
 	var (
 		totalAmount float64
@@ -83,7 +89,7 @@ func (uc *ShopOrderUseCase) getTotalAmount(productIds []int32) (float64, error) 
 	for _, productID := range productIds {
 		product, err := uc.productRepository.GetProductByID(productID)
 		if err != nil {
-			return 0, entity.ErrProductNotFound
+			return 0, ErrProductNotFound
 		}
 
 		totalAmount += product.Price

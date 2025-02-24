@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/shop/entity"
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/shop/repository"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -31,7 +32,7 @@ func NewProductRepositoryStub(products []*entity.Product) ProductProductReposito
 	}
 }
 
-func (r ProductProductRepositoryStub) Products(_ entity.Params) ([]*entity.Product, error) {
+func (r ProductProductRepositoryStub) Products(_ repository.Params) ([]*entity.Product, error) {
 	products := []*entity.Product{}
 
 	for _, product := range r.products {
@@ -41,7 +42,7 @@ func (r ProductProductRepositoryStub) Products(_ entity.Params) ([]*entity.Produ
 	return products, nil
 }
 
-func (r ProductProductRepositoryStub) CreateProduct(arg entity.ProductCreateParams) (*entity.Product, error) {
+func (r ProductProductRepositoryStub) CreateProduct(arg repository.ProductCreateParams) (*entity.Product, error) {
 	r.index++
 	product := &entity.Product{
 		ID:    r.index,
@@ -64,7 +65,7 @@ func TestShopUsersUseCase_GetProducts(t *testing.T) {
 	uc := ShopProductUseCase{
 		repo: repo,
 	}
-	arg := entity.Params{
+	arg := repository.Params{
 		Limit:  10,
 		Offset: 0,
 	}
@@ -80,7 +81,7 @@ func TestShopUsersUseCase_CreateProduct(t *testing.T) {
 	uc := ShopProductUseCase{
 		repo: repo,
 	}
-	arg := entity.ProductCreateParams{
+	arg := repository.ProductCreateParams{
 		Name:  "name",
 		Price: 10.0,
 	}

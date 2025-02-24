@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/shop/entity"
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/shop/repository"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -31,7 +32,7 @@ func (r ShopUserRepositoryStub) GetUserByID(id int32) (*entity.User, error) {
 	return r.shopUsers[id], nil
 }
 
-func (r ShopUserRepositoryStub) Users(_ entity.Params) ([]*entity.User, error) {
+func (r ShopUserRepositoryStub) Users(_ repository.Params) ([]*entity.User, error) {
 	shopUsers := []*entity.User{}
 
 	for _, shopUser := range r.shopUsers {
@@ -41,7 +42,7 @@ func (r ShopUserRepositoryStub) Users(_ entity.Params) ([]*entity.User, error) {
 	return shopUsers, nil
 }
 
-func (r ShopUserRepositoryStub) UserCreate(arg entity.UserCreateParams) (*entity.User, error) {
+func (r ShopUserRepositoryStub) UserCreate(arg repository.UserCreateParams) (*entity.User, error) {
 	r.index++
 	shopUser := &entity.User{
 		ID:       r.index,
@@ -53,7 +54,7 @@ func (r ShopUserRepositoryStub) UserCreate(arg entity.UserCreateParams) (*entity
 	return shopUser, nil
 }
 
-func (r ShopUserRepositoryStub) UserUpdate(arg entity.UserUpdateParams) (*entity.User, error) {
+func (r ShopUserRepositoryStub) UserUpdate(arg repository.UserUpdateParams) (*entity.User, error) {
 	r.shopUsers[arg.ID] = &entity.User{
 		Name: arg.Name,
 	}
@@ -74,7 +75,7 @@ func TestShopUsersUseCase_GetUsers(t *testing.T) {
 	uc := ShopUsersUseCase{
 		repo: repo,
 	}
-	arg := entity.Params{
+	arg := repository.Params{
 		Limit:  10,
 		Offset: 0,
 	}
@@ -90,7 +91,7 @@ func TestShopUsersUseCase_CreateUser(t *testing.T) {
 	uc := ShopUsersUseCase{
 		repo: repo,
 	}
-	arg := entity.UserCreateParams{
+	arg := repository.UserCreateParams{
 		Name:     "name",
 		Email:    "email@mail.loc",
 		Password: "password",
@@ -116,7 +117,7 @@ func TestShopUsersUseCase_UpdateUser(t *testing.T) {
 	uc := ShopUsersUseCase{
 		repo: repo,
 	}
-	arg := entity.UserUpdateParams{
+	arg := repository.UserUpdateParams{
 		ID:   1,
 		Name: "New Name",
 	}

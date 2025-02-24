@@ -8,8 +8,8 @@ import (
 )
 
 type ShopProductUseCaseInterface interface {
-	GetProducts(arg entity.Params) ([]*entity.Product, error)
-	CreateProduct(arg entity.ProductCreateParams) (*entity.Product, error)
+	GetProducts(arg repository.Params) ([]*entity.Product, error)
+	CreateProduct(arg repository.ProductCreateParams) (*entity.Product, error)
 }
 
 type ShopProductUseCase struct {
@@ -20,8 +20,8 @@ func NewShopProductUseCase(repo repository.ShopProductRepositoryInterface) *Shop
 	return &ShopProductUseCase{repo: repo}
 }
 
-func (uc ShopProductUseCase) GetProducts(arg entity.Params) ([]*entity.Product, error) {
-	p := entity.Params{
+func (uc ShopProductUseCase) GetProducts(arg repository.Params) ([]*entity.Product, error) {
+	p := repository.Params{
 		Limit:  10,
 		Offset: 0,
 	}
@@ -39,6 +39,6 @@ func (uc ShopProductUseCase) GetProducts(arg entity.Params) ([]*entity.Product, 
 	return uc.repo.Products(p)
 }
 
-func (uc ShopProductUseCase) CreateProduct(arg entity.ProductCreateParams) (*entity.Product, error) {
+func (uc ShopProductUseCase) CreateProduct(arg repository.ProductCreateParams) (*entity.Product, error) {
 	return uc.repo.CreateProduct(arg)
 }

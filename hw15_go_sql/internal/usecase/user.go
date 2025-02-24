@@ -8,9 +8,9 @@ import (
 )
 
 type ShopUsersUseCaseInterface interface {
-	GetUsers(arg entity.Params) ([]*entity.User, error)
-	CreateUser(arg entity.UserCreateParams) (*entity.User, error)
-	UpdateUser(arg entity.UserUpdateParams) (*entity.User, error)
+	GetUsers(arg repository.Params) ([]*entity.User, error)
+	CreateUser(arg repository.UserCreateParams) (*entity.User, error)
+	UpdateUser(arg repository.UserUpdateParams) (*entity.User, error)
 }
 
 type ShopUsersUseCase struct {
@@ -21,8 +21,8 @@ func NewShopUsersUseCase(repo repository.ShopUserRepositoryInterface) *ShopUsers
 	return &ShopUsersUseCase{repo: repo}
 }
 
-func (uc ShopUsersUseCase) GetUsers(arg entity.Params) ([]*entity.User, error) {
-	p := entity.Params{
+func (uc ShopUsersUseCase) GetUsers(arg repository.Params) ([]*entity.User, error) {
+	p := repository.Params{
 		Limit:  10,
 		Offset: 0,
 	}
@@ -40,10 +40,10 @@ func (uc ShopUsersUseCase) GetUsers(arg entity.Params) ([]*entity.User, error) {
 	return uc.repo.Users(p)
 }
 
-func (uc ShopUsersUseCase) CreateUser(arg entity.UserCreateParams) (*entity.User, error) {
+func (uc ShopUsersUseCase) CreateUser(arg repository.UserCreateParams) (*entity.User, error) {
 	return uc.repo.UserCreate(arg)
 }
 
-func (uc ShopUsersUseCase) UpdateUser(arg entity.UserUpdateParams) (*entity.User, error) {
+func (uc ShopUsersUseCase) UpdateUser(arg repository.UserUpdateParams) (*entity.User, error) {
 	return uc.repo.UserUpdate(arg)
 }

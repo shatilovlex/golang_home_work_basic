@@ -6,6 +6,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/shop/entity"
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/shop/repository"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/infrastructure/db"
 )
 
@@ -33,7 +34,7 @@ func (r ShopUserRepository) GetUserByID(id int32) (*entity.User, error) {
 	return &item, nil
 }
 
-func (r ShopUserRepository) UserCreate(arg entity.UserCreateParams) (*entity.User, error) {
+func (r ShopUserRepository) UserCreate(arg repository.UserCreateParams) (*entity.User, error) {
 	var (
 		id  int32
 		err error
@@ -53,7 +54,7 @@ func (r ShopUserRepository) UserCreate(arg entity.UserCreateParams) (*entity.Use
 	return r.GetUserByID(id)
 }
 
-func (r ShopUserRepository) Users(arg entity.Params) ([]*entity.User, error) {
+func (r ShopUserRepository) Users(arg repository.Params) ([]*entity.User, error) {
 	var (
 		rows pgx.Rows
 		err  error
@@ -82,7 +83,7 @@ func (r ShopUserRepository) Users(arg entity.Params) ([]*entity.User, error) {
 	return items, nil
 }
 
-func (r ShopUserRepository) UserUpdate(arg entity.UserUpdateParams) (*entity.User, error) {
+func (r ShopUserRepository) UserUpdate(arg repository.UserUpdateParams) (*entity.User, error) {
 	var (
 		id  int32
 		err error

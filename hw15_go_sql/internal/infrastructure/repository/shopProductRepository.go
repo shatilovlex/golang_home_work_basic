@@ -6,6 +6,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/shop/entity"
+	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/shop/repository"
 	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/infrastructure/db"
 )
 
@@ -33,7 +34,7 @@ func (r ShopProductRepository) GetProductByID(id int32) (*entity.Product, error)
 	return &item, nil
 }
 
-func (r ShopProductRepository) Products(arg entity.Params) ([]*entity.Product, error) {
+func (r ShopProductRepository) Products(arg repository.Params) ([]*entity.Product, error) {
 	var (
 		rows pgx.Rows
 		err  error
@@ -61,7 +62,7 @@ func (r ShopProductRepository) Products(arg entity.Params) ([]*entity.Product, e
 	return items, nil
 }
 
-func (r ShopProductRepository) CreateProduct(arg entity.ProductCreateParams) (*entity.Product, error) {
+func (r ShopProductRepository) CreateProduct(arg repository.ProductCreateParams) (*entity.Product, error) {
 	var (
 		id  int32
 		err error
