@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/shop/repository"
+	"github.com/shatilovlex/golang_home_work_basic/hw16_docker/internal/domain/shop/repository"
 )
 
 var ErrInvalidLimitParam = errors.New("error getting limit")

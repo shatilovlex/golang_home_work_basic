@@ -3,8 +3,8 @@ package usecase
 import (
 	"testing"
 
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/shop/entity"
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/shop/repository"
+	"github.com/shatilovlex/golang_home_work_basic/hw16_docker/internal/domain/shop/entity"
+	"github.com/shatilovlex/golang_home_work_basic/hw16_docker/internal/domain/shop/repository"
 	"github.com/stretchr/testify/assert"
 )
 

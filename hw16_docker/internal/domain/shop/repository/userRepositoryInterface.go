@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/domain/shop/entity"
+	"github.com/shatilovlex/golang_home_work_basic/hw16_docker/internal/domain/shop/entity"
 )
 
 type ShopUserRepositoryInterface interface {

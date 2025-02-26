@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/infrastructure/server/app"
+	"github.com/shatilovlex/golang_home_work_basic/hw16_docker/internal/infrastructure/server/app"
 )
 
 func main() {

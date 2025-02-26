@@ -13,12 +13,12 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/infrastructure/config"
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/infrastructure/repository"
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/infrastructure/server/handler"
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/infrastructure/server/handler/shopendpoint"
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/internal/usecase"
-	"github.com/shatilovlex/golang_home_work_basic/hw15_go_sql/pkg/pgconnect"
+	"github.com/shatilovlex/golang_home_work_basic/hw16_docker/internal/infrastructure/config"
+	"github.com/shatilovlex/golang_home_work_basic/hw16_docker/internal/infrastructure/repository"
+	"github.com/shatilovlex/golang_home_work_basic/hw16_docker/internal/infrastructure/server/handler"
+	"github.com/shatilovlex/golang_home_work_basic/hw16_docker/internal/infrastructure/server/handler/shopendpoint"
+	"github.com/shatilovlex/golang_home_work_basic/hw16_docker/internal/usecase"
+	"github.com/shatilovlex/golang_home_work_basic/hw16_docker/pkg/pgconnect"
 )
 
 type App struct {
