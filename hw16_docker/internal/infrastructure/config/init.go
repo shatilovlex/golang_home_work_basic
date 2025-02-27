@@ -34,10 +34,5 @@ func load() error {
 		return fmt.Errorf("can't parse config: %w", err)
 	}
 
-	err = godotenv.Load(".env")
-	if err != nil {
-		return fmt.Errorf("can't load .env: %w", err)
-	}
-
 	return nil
 }

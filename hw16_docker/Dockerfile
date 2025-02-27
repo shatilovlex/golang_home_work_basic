@@ -4,7 +4,7 @@ WORKDIR /app
 COPY go.mod .
 RUN go mod download
 COPY . .
-RUN go build -o /bin/shop
+RUN go build -o /bin/shop ./cmd/server/main.go
 #run shop server in container
 FROM alpine:latest
 COPY --from=builder /bin/shop /bin/shop
